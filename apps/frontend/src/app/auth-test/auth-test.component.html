@@ -1,0 +1,8 @@
+@if (isAuthenticated$ | async) {
+  <p>Logged in as: {{ (user$ | async)?.nickname || "Loading..." }}</p>
+  <img [src]="(user$ | async)?.picture" width="50" />
+  <pre>{{ user$ | async | json }}</pre>
+  <button (click)="logout()">Logout</button>
+} @else {
+  <button (click)="login()">Login with Auth0 (Twitch)</button>
+}
