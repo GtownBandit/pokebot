@@ -1,15 +1,77 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String            @id @default(cuid())
+  twitchUserId  String            @unique
+  displayName   String
+  avatarUrl     String?
+  createdAt     DateTime          @default(now())
+  pokemon       PokemonInstance[]
+  spawnEvents   SpawnEvent[]
+  catchAttempts CatchAttempt[]
+}
+
+model PokemonSpecies {
+  id          Int               @id
+  name        String            @unique
+  displayName String
+  type1       String
+  type2       String?
+  baseStats   Json?
+  genderRate  Int?
+  baseExp     Int?
+  captureRate Int?
+  spriteUrl   String?
+  shinyUrl    String?
+  rarity      Int
+  instances   PokemonInstance[]
+  spawnEvents SpawnEvent[] // <- Add this line
+}
+
+model PokemonInstance {
+  id            String         @id @default(cuid())
+  ownerId       String
+  owner         User           @relation(fields: [ownerId], references: [id])
+  speciesId     Int
+  species       PokemonSpecies @relation(fields: [speciesId], references: [id])
+  level         Int
+  gender        String? // 'M' | 'F' | 'U'
+  nickname      String?
+  shiny         Boolean        @default(false)
+  createdAt     DateTime       @default(now())
+  originSpawn   SpawnEvent?    @relation(fields: [originSpawnId], references: [id])
+  originSpawnId String?
+  experience    Int            @default(0)
+}
+
+model SpawnEvent {
+  id         String            @id @default(cuid())
+  channel    String
+  speciesId  Int
+  species    PokemonSpecies    @relation(fields: [speciesId], references: [id])
+  level      Int
+  spawnedAt  DateTime          @default(now())
+  expiresAt  DateTime
+  caughtById String?
+  caughtBy   User?             @relation(fields: [caughtById], references: [id])
+  attempts   CatchAttempt[]
+  pokemon    PokemonInstance[]
+}
+
+model CatchAttempt {
+  id        String     @id @default(cuid())
+  spawnId   String
+  spawn     SpawnEvent @relation(fields: [spawnId], references: [id])
+  userId    String
+  user      User       @relation(fields: [userId], references: [id])
+  roll      Int
+  success   Boolean
+  createdAt DateTime   @default(now())
 }
