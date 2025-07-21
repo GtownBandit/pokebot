@@ -75,3 +75,4 @@ model CatchAttempt {
   success   Boolean
   createdAt DateTime   @default(now())
 }
+
