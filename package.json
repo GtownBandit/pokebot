@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev:backend": "pnpm --filter backend start:dev",
+    "dev:backend": "dotenv -e .env -- pnpm --filter backend start:dev",
     "dev:frontend": "pnpm --filter frontend start",
     "dev": "concurrently -k \"pnpm dev:backend\" \"pnpm dev:frontend\""
   },
@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "concurrently": "^9.2.0"
+    "concurrently": "^9.2.0",
+    "dotenv-cli": "^8.0.0"
   }
 }
