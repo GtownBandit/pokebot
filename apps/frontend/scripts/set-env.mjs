@@ -1,7 +1,7 @@
 import { writeFileSync } from 'fs';
 import { join } from 'path';
 
-const targetPath = join('./src/environments/environment.prod.ts');
+const targetPath = join('../src/environments/environment.prod.ts');
 
 const envConfig = `
 export const environment = {
@@ -13,4 +13,5 @@ export const environment = {
 `;
 
 console.log('Writing environment.prod.ts with Vercel environment variables...');
+console.log(envConfig)
 writeFileSync(targetPath, envConfig);
