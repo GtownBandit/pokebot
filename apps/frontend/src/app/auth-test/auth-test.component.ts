@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
 import { AsyncPipe, JsonPipe } from '@angular/common';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-auth-test',
@@ -15,6 +16,7 @@ export class AuthTestComponent {
   isAuthenticated$ = this.auth.isAuthenticated$;
 
   login() {
+    console.log(environment);
     this.auth.loginWithRedirect();
   }
 
