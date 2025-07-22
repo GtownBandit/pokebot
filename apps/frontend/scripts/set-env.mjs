@@ -13,5 +13,4 @@ export const environment = {
 `;
 
 console.log('Writing environment.prod.ts with Vercel environment variables...');
-console.log(envConfig)
 writeFileSync(targetPath, envConfig);
