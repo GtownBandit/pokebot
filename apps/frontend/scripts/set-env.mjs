@@ -1,7 +1,7 @@
 import { writeFileSync } from 'fs';
 import { join } from 'path';
 
-const targetPath = join('../src/environments/environment.prod.ts');
+const targetPath = join('./src/environments/environment.prod.ts');
 
 const envConfig = `
 export const environment = {
