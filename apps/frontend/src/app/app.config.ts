@@ -5,7 +5,7 @@ import {
   provideZoneChangeDetection,
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
-
+import { environment } from '../environments/environment';
 import { routes } from './app.routes';
 import { AuthModule } from '@auth0/auth0-angular';
 
@@ -16,11 +16,11 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     importProvidersFrom(
       AuthModule.forRoot({
-        domain: 'https://auth.pokebot.at',
-        clientId: 'YtVam2xqYB7b5VX3sJLHMiILFrB7DJRK',
+        domain: environment.authDomain,
+        clientId: environment.authClientId,
         authorizationParams: {
           redirect_uri: window.location.origin,
-          audience: 'https://pokebot.at/api',
+          audience: environment.authAudience,
         },
       }),
     ),
