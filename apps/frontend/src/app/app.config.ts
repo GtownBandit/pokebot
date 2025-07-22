@@ -16,7 +16,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     importProvidersFrom(
       AuthModule.forRoot({
-        domain: 'gtownbandit.eu.auth0.com',
+        domain: 'https://auth.pokebot.at',
         clientId: 'YtVam2xqYB7b5VX3sJLHMiILFrB7DJRK',
         authorizationParams: {
           redirect_uri: window.location.origin,
