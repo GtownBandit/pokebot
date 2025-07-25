@@ -61,7 +61,7 @@ export class PokemonCatchService {
         `${username} hat ${pokemonName} gefangen! (Wurf: ${roll} / Level: ${level})`,
       );
     } else {
-      const escapeRoll = Math.floor(Math.random() * 10) + 1;
+      const escapeRoll = Math.floor(Math.random() * 5) + 1;
       if (escapeRoll <= 1) {
         await this.prisma.spawnEvent.update({
           where: { id: spawnEvent.id },
