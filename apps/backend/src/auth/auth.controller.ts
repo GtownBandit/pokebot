@@ -1,6 +1,7 @@
 // apps/backend/src/auth/auth.controller.ts
 import { Controller, Get, Query, Res } from '@nestjs/common';
 import { Response } from 'express';
+import * as console from 'node:console';
 
 @Controller('auth')
 export class AuthController {
@@ -29,12 +30,16 @@ export class AuthController {
       redirect_uri: redirectUri,
     });
 
+    console.log('Exchanging code for tokens with params:', params.toString());
+
     const tokenResponse = await fetch(
       `https://id.twitch.tv/oauth2/token?${params.toString()}`,
       {
         method: 'POST',
       },
     );
+
+    console.log('Token response status:', tokenResponse.status);
 
     if (!tokenResponse.ok) {
       const errorBody = await tokenResponse.text();

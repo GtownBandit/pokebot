@@ -3,6 +3,7 @@ import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
 import { RefreshingAuthProvider, AccessToken } from '@twurple/auth';
 import { ChatClient } from '@twurple/chat';
 import { promises as fs } from 'fs';
+import * as console from 'node:console';
 
 @Injectable()
 export class TwitchService implements OnModuleInit {
@@ -23,6 +24,8 @@ export class TwitchService implements OnModuleInit {
       expiresIn: 0,
       obtainmentTimestamp: 0,
     };
+
+    console.log('Initializing Twitch chat client with token data:', tokenData);
 
     // 1. Create provider (no onRefresh here!)
     this.authProvider = new RefreshingAuthProvider({ clientId, clientSecret });
