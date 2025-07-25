@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev:backend": "pnpm --filter backend start:dev",
+    "dev:backend": "dotenv -e .env -- pnpm --filter backend start:dev",
     "prod:backend": "dotenv -e .env -- pnpm --filter backend start:prod",
     "prod:backend:build": "pnpm --filter backend build",
     "dev:frontend": "pnpm --filter frontend start",
