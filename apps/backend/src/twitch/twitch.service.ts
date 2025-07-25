@@ -25,8 +25,6 @@ export class TwitchService implements OnModuleInit {
       obtainmentTimestamp: 0,
     };
 
-    console.log('Initializing Twitch chat client with token data:', tokenData);
-
     // 1. Create provider (no onRefresh here!)
     this.authProvider = new RefreshingAuthProvider({ clientId, clientSecret });
 
@@ -72,7 +70,6 @@ export class TwitchService implements OnModuleInit {
     // Listen for messages (for future "!catch" command)
     this.chatClient.onMessage((chan, user, text) => {
       if (text.trim().toLowerCase() === '!catch') {
-        // TODO: call your catch logic
         this.chatClient.say(chan, `@${user} tried to catch the Pokémon!`);
       }
     });
