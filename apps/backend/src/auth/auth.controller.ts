@@ -16,7 +16,7 @@ export class AuthController {
 
     const clientId = process.env.TWITCH_BOT_CLIENT_ID!;
     const clientSecret = process.env.TWITCH_BOT_CLIENT_SECRET!;
-    const redirectUri = 'http://localhost:3000/auth/callback'; // must match your redirect URI in Twitch app
+    const redirectUri = process.env.BACKEND_URL + '/auth/callback'; // must match your redirect URI in Twitch app
 
     const fetch = (await import('node-fetch')).default;
 
