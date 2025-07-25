@@ -19,19 +19,24 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "seed": "dotenv -e ../../.env -- ts-node prisma/seed.ts",
-    "migrate:dev": "dotenv -e ../../.env -- prisma migrate dev --schema=prisma/schema.prisma",
-    "prisma:generate": "dotenv -e ../../.env -- prisma generate --schema=prisma/schema.prisma"
+    "prisma:migrate:dev": "dotenv -e ../../.env -- prisma migrate dev --schema=prisma/schema.prisma",
+    "prisma:generate": "dotenv -e ../../.env -- prisma generate --schema=prisma/schema.prisma",
+    "prisma:format": "dotenv -e ../../.env -- prisma format --schema=prisma/schema.prisma"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
     "@nestjs/core": "^11.0.1",
     "@nestjs/platform-express": "^11.0.1",
+    "@nestjs/schedule": "^6.0.0",
     "@prisma/client": "^6.12.0",
     "@twurple/api": "^7.3.0",
     "@twurple/auth": "^7.3.0",
     "@twurple/chat": "^7.3.0",
     "@twurple/eventsub-http": "^7.3.0",
+    "axios": "^1.11.0",
+    "axios-cache-interceptor": "^1.8.0",
     "node-fetch": "^3.3.2",
+    "pokenode-ts": "^1.20.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1"
   },

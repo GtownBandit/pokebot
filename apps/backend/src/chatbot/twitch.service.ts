@@ -1,9 +1,8 @@
-// apps/backend/src/twitch/twitch.service.ts
-import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
-import { RefreshingAuthProvider, AccessToken } from '@twurple/auth';
+// apps/backend/src/chatbot/chatbot.service.ts
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { AccessToken, RefreshingAuthProvider } from '@twurple/auth';
 import { ChatClient } from '@twurple/chat';
 import { promises as fs } from 'fs';
-import * as console from 'node:console';
 
 @Injectable()
 export class TwitchService implements OnModuleInit {
@@ -80,14 +79,14 @@ export class TwitchService implements OnModuleInit {
     this.chatClient.say(channel, 'Pokebot is online!');
   }
 
-  async spawnPokemon(pokemonName: string) {
+  async spawnPokemon(pokemonName: string, level: number) {
     if (!this.chatClient) {
       throw new Error('Twitch chat not initialized');
     }
     const channel = process.env.TWITCH_CHANNEL!;
     await this.chatClient.say(
       channel,
-      `A wild ${pokemonName} appeared! Type !catch to try catching it!`,
+      `Ein wildes ${pokemonName} Level ${level} erscheint!`,
     );
   }
 }
