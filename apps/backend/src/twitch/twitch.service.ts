@@ -76,6 +76,7 @@ export class TwitchService implements OnModuleInit {
 
     // Connect (sync; `await` is harmless but unnecessary in current versions)
     this.chatClient.connect();
+    this.logger.log(`Twitch chat client connected to channel: ${channel}`);
     this.chatClient.say(channel, 'Pokebot is online!');
   }
 

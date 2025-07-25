@@ -1,7 +1,6 @@
 // apps/backend/src/auth/auth.controller.ts
 import { Controller, Get, Query, Res } from '@nestjs/common';
 import { Response } from 'express';
-import fetch from 'node-fetch';
 
 @Controller('auth')
 export class AuthController {
@@ -18,6 +17,8 @@ export class AuthController {
     const clientId = process.env.TWITCH_BOT_CLIENT_ID!;
     const clientSecret = process.env.TWITCH_BOT_CLIENT_SECRET!;
     const redirectUri = 'http://localhost:3000/auth/callback'; // must match your redirect URI in Twitch app
+
+    const fetch = (await import('node-fetch')).default;
 
     // Exchange code for tokens
     const params = new URLSearchParams({
