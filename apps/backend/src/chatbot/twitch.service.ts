@@ -1,14 +1,29 @@
 // apps/backend/src/chatbot/chatbot.service.ts
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  Logger,
+  OnModuleInit,
+} from '@nestjs/common';
 import { AccessToken, RefreshingAuthProvider } from '@twurple/auth';
 import { ChatClient } from '@twurple/chat';
 import { promises as fs } from 'fs';
+import { PokemonCatchService } from './pokemon/pokemon-catch.service';
+import { PokemonSpawnService } from './pokemon/pokemon-spawn.service';
 
 @Injectable()
 export class TwitchService implements OnModuleInit {
   private readonly logger = new Logger(TwitchService.name);
   private authProvider!: RefreshingAuthProvider;
   private chatClient!: ChatClient;
+
+  constructor(
+    @Inject(forwardRef(() => PokemonCatchService))
+    private pokemonCatchService: PokemonCatchService,
+    @Inject(forwardRef(() => PokemonSpawnService))
+    private pokemonSpawnService: PokemonSpawnService,
+  ) {}
 
   async onModuleInit() {
     const clientId = process.env.TWITCH_BOT_CLIENT_ID!;
@@ -69,7 +84,12 @@ export class TwitchService implements OnModuleInit {
     // Listen for messages (for future "!catch" command)
     this.chatClient.onMessage((chan, user, text) => {
       if (text.trim().toLowerCase() === '!catch') {
-        this.chatClient.say(chan, `@${user} tried to catch the Pokémon!`);
+        this.pokemonCatchService.tryCatchPokemon(user);
+      } else if (
+        text.trim().toLowerCase() === '!spawn' &&
+        user === process.env.TWITCH_BOT_USERNAME
+      ) {
+        this.pokemonSpawnService.spawnRandomPokemon();
       }
     });
 
@@ -79,14 +99,10 @@ export class TwitchService implements OnModuleInit {
     this.chatClient.say(channel, 'Pokebot is online!');
   }
 
-  async spawnPokemon(pokemonName: string, level: number) {
+  async sendChatMessage(message: string) {
     if (!this.chatClient) {
       throw new Error('Twitch chat not initialized');
     }
-    const channel = process.env.TWITCH_CHANNEL!;
-    await this.chatClient.say(
-      channel,
-      `Ein wildes ${pokemonName} Level ${level} erscheint!`,
-    );
+    await this.chatClient.say(process.env.TWITCH_CHANNEL!, message);
   }
 }

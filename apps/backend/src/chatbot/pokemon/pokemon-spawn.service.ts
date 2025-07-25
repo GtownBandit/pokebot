@@ -1,18 +1,22 @@
 // src/pokemon/pokemon-spawn.service.ts
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  Logger,
+  OnModuleInit,
+} from '@nestjs/common';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { Interval } from '@nestjs/schedule';
 import { TwitchService } from '../twitch.service';
-import { GameClient, PokemonClient } from 'pokenode-ts';
 
 @Injectable()
 export class PokemonSpawnService implements OnModuleInit {
   private readonly logger = new Logger(PokemonSpawnService.name);
-  private pokemonClient = new PokemonClient();
-  private gameClient = new GameClient();
 
   constructor(
     private prisma: PrismaService,
+    @Inject(forwardRef(() => TwitchService))
     private twitchService: TwitchService,
   ) {}
 
@@ -42,6 +46,8 @@ export class PokemonSpawnService implements OnModuleInit {
       },
     });
 
-    await this.twitchService.spawnPokemon(pokemon.displayNameDe, randomLevel);
+    await this.twitchService.sendChatMessage(
+      `Ein wildes ${pokemon.displayNameDe} Level ${randomLevel} erscheint!`,
+    );
   }
 }
