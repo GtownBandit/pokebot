@@ -26,7 +26,7 @@ export class PokemonSpawnService implements OnModuleInit {
   async spawnRandomPokemon() {
     const randomId = Math.floor(Math.random() * 151) + 1; // Pokémon IDs range from 1 to 151
     const randomLevel = Math.floor(Math.random() * 100) + 1; // Random level between 1 and 100
-    const shinyChance = 1;
+    const shinyChance = Math.floor(Math.random() * 255) + 1; // Random level between 1 and 255
     const pokemon = await this.prisma.pokemon.findUnique({
       where: { id: randomId },
     });
