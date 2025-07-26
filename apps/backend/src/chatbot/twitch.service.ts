@@ -17,6 +17,7 @@ export class TwitchService implements OnModuleInit {
   private readonly logger = new Logger(TwitchService.name);
   private authProvider!: RefreshingAuthProvider;
   private chatClient!: ChatClient;
+  private spawnPokemonInterval: NodeJS.Timeout | null = null;
 
   constructor(
     @Inject(forwardRef(() => PokemonCatchService))
@@ -82,21 +83,32 @@ export class TwitchService implements OnModuleInit {
     );
 
     // Listen for messages (for future "!catch" command)
-    this.chatClient.onMessage((chan, user, text) => {
+    this.chatClient.onMessage((chan, user, text, msg) => {
       if (text.trim().toLowerCase() === '!catch') {
-        this.pokemonCatchService.tryCatchPokemon(user);
-      } else if (
-        text.trim().toLowerCase() === '!spawn' &&
-        user.toLowerCase() === process.env.TWITCH_CHANNEL
-      ) {
-        this.pokemonSpawnService.spawnRandomPokemon();
+        this.pokemonCatchService.tryCatchPokemon(msg);
+      }
+      if (user.toLowerCase() === process.env.TWITCH_CHANNEL) {
+        if (text.trim().toLowerCase() === '!spawn') {
+          this.pokemonSpawnService.spawnRandomPokemon();
+        } else if (text.trim().toLowerCase() === '!autospawn') {
+          this.spawnPokemonInterval = setInterval(() => {
+            this.pokemonSpawnService.spawnRandomPokemon();
+          }, 30 * 1000); // Spawn thirty seconds
+          this.logger.log('Auto-spawn started.');
+        } else if (text.trim().toLowerCase() === '!stopautospawn') {
+          if (this.spawnPokemonInterval) {
+            clearInterval(this.spawnPokemonInterval);
+            this.spawnPokemonInterval = null;
+            this.logger.log('Auto-spawn stopped.');
+          } else {
+            this.logger.warn('No auto-spawn interval to stop.');
+          }
+        }
       }
     });
 
-    // Connect (sync; `await` is harmless but unnecessary in current versions)
     this.chatClient.connect();
     this.logger.log(`Twitch chat client connected to channel: ${channel}`);
-    this.chatClient.say(channel, 'Pokebot is online!');
   }
 
   async sendChatMessage(message: string) {

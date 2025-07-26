@@ -8,42 +8,55 @@ datasource db {
 }
 
 model Pokemon {
-  id            Int          @id @default(autoincrement())
-  name          String       @unique
-  displayName   String
-  displayNameDe String
-  type1         String
-  type2         String?
-  spawnEvents   SpawnEvent[]
+  id                  Int          @id @default(autoincrement())
+  name                String       @unique
+  displayName         String
+  displayNameDe       String
+  type1               String
+  type2               String?
+  pokemonInstances    PokemonInstance[]
 }
 
-model SpawnEvent {
+model PokemonInstance {
   id         Int      @id @default(autoincrement())
-  channel    String
   pokemonId  Int
   pokemon    Pokemon  @relation(fields: [pokemonId], references: [id])
   level      Int
-  spawnedAt  DateTime @default(now())
-  expiresAt  DateTime
-  caughtById String?
+  userId     Int?
+  user       User?     @relation(fields: [userId], references: [id])
+  nickname   String?
+  shiny      Boolean  @default(false)
+  spawnEvents SpawnEvent?
+}
+
+model SpawnEvent {
+  id                    Int      @id @default(autoincrement())
+  channel             String
+  pokemonInstanceId     Int               @unique
+  pokemonInstance       PokemonInstance   @relation(fields: [pokemonInstanceId], references: [id])
+  spawnedAt       DateTime @default(now())
+  expiresAt       DateTime?
   catchRollEvents CatchRollEvent[]
 }
 
 model CatchRollEvent {
-  id         Int      @id @default(autoincrement())
-  spawnEventId  Int
-  pokemon    SpawnEvent  @relation(fields: [spawnEventId], references: [id])
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id])
-  roll      Int
-  success    Boolean
-  rolledAt   DateTime @default(now())
+  id              Int      @id @default(autoincrement())
+  spawnEventId    Int
+  spawnEvent      SpawnEvent  @relation(fields: [spawnEventId], references: [id])
+  userId          Int
+  user            User     @relation(fields: [userId], references: [id])
+  roll            Int
+  success         Boolean
+  pokemonRanAway         Boolean @default(false)
+  rolledAt        DateTime @default(now())
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  username  String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  spawnEvents CatchRollEvent[]
+  id                    Int      @id @default(autoincrement())
+  twitchId              String   @unique
+  username              String   @unique
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  catchRollEvents       CatchRollEvent[]
+  pokemonInstances      PokemonInstance[]
 }
