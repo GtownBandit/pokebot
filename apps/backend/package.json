@@ -1,10 +1,13 @@
 {
   "name": "backend",
   "version": "0.0.1",
-  "description": "",
+  "description": "The backend for Pokebot frontend & a Twitch bot for Pokémon spawning.",
   "author": "",
   "private": true,
   "license": "UNLICENSED",
+  "engines": {
+    "node": "22"
+  },
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
