@@ -6,13 +6,13 @@
   "private": true,
   "scripts": {
     "prisma:format": "prisma format",
-    "prisma:migrate:dev": "prisma migrate dev",
+    "prisma:migrate:dev": "dotenv -e ../../.env -- prisma migrate dev",
     "prisma:generate": "prisma generate"
   },
   "dependencies": {
-    "@prisma/client": "^5.12.0"
+    "@prisma/client": "^6.12.0"
   },
   "devDependencies": {
-    "prisma": "^5.12.0"
+    "prisma": "^6.12.0"
   }
 }
