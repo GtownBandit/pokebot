@@ -32,7 +32,7 @@ export class PokemonSpawnService implements OnModuleInit {
 
     const pokemonInstanceValues = this.getRandomPokemonValues(pokemon);
 
-    await this.invalidateActiveSpawnEvent();
+    await this.invalidateActiveSpawnEvents();
 
     await this.prisma.spawnEvent.create({
       data: {
@@ -139,8 +139,8 @@ export class PokemonSpawnService implements OnModuleInit {
     }
   }
 
-  async invalidateActiveSpawnEvent() {
-    const activeSpawnEvent = await this.prisma.spawnEvent.findFirst({
+  async invalidateActiveSpawnEvents() {
+    const activeSpawnEvents = await this.prisma.spawnEvent.findMany({
       where: {
         expiresAt: null,
         channel: process.env.TWITCH_CHANNEL!,
@@ -148,11 +148,13 @@ export class PokemonSpawnService implements OnModuleInit {
       orderBy: { expiresAt: 'desc' },
     });
 
-    if (activeSpawnEvent) {
-      const spawnEvent = await this.prisma.spawnEvent.update({
-        where: { id: activeSpawnEvent.id },
-        data: { expiresAt: new Date() },
-      });
+    if (activeSpawnEvents.length > 0) {
+      for (const activeSpawnEvent of activeSpawnEvents) {
+        await this.prisma.spawnEvent.update({
+          where: { id: activeSpawnEvent.id },
+          data: { expiresAt: new Date() },
+        });
+      }
     }
   }
 }
