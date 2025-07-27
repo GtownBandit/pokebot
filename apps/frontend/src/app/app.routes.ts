@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from './login/login/login.component';
-import { AuthTestComponent } from './auth-test/auth-test.component';
-import { AuthResolver } from './auth.resolver';
+import { AuthTestComponent, LoginComponent } from './features';
+import { AuthResolver } from './core';
 
 export const routes: Routes = [
   {

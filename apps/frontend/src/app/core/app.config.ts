@@ -5,8 +5,8 @@ import {
   provideZoneChangeDetection,
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { environment } from '../environments/environment';
-import { routes } from './app.routes';
+import { environment } from '../../environments/environment';
+import { routes } from '../app.routes';
 import { AuthModule } from '@auth0/auth0-angular';
 
 export const appConfig: ApplicationConfig = {
@@ -26,5 +26,3 @@ export const appConfig: ApplicationConfig = {
     ),
   ],
 };
-
-// Moved to core/app.config.ts

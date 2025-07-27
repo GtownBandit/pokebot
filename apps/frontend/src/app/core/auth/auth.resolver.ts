@@ -12,6 +12,9 @@ export class AuthResolver implements Resolve<Promise<boolean>> {
   async resolve(): Promise<boolean> {
     const isAuth = await this.authService.isAuthenticated();
     if (isAuth) {
+      // Get the user payload from Auth0 and save the Twitch ID
+      const user = await this.authService.getUser();
+      this.authService.saveTwitchIdFromUser(user);
       this.router.navigate(['/auth-test']);
       return false;
     }
