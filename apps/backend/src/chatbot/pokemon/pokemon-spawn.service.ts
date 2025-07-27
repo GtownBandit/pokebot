@@ -8,6 +8,30 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { TwitchService } from '../twitch.service';
+import { PokemonRandomizer } from './spawn-helpers/pokemon-randomizer.helper';
+import { PokemonMessageFormatter } from './spawn-helpers/pokemon-message-formatter.helper';
+
+// --- Types and Interfaces ---
+// Prisma-generated types (imported from @prisma/client)
+import { Pokemon, PokemonSpecies } from '@prisma/client';
+
+// Gender type for clarity
+export type PokemonGender = 'MALE' | 'FEMALE' | 'GENDERLESS';
+
+// Combined type for a Pokemon with its species info
+export interface PokemonWithSpecies extends Pokemon {
+  pokemonSpecies: Pick<
+    PokemonSpecies,
+    'genderRate' | 'isBaby' | 'isLegendary' | 'isMythical' | 'captureRate'
+  >;
+}
+
+// Values for a spawned Pokemon instance
+export interface PokemonInstanceValues {
+  level: number;
+  shiny: boolean;
+  gender: PokemonGender;
+}
 
 @Injectable()
 export class PokemonSpawnService implements OnModuleInit {
@@ -30,7 +54,8 @@ export class PokemonSpawnService implements OnModuleInit {
       return;
     }
 
-    const pokemonInstanceValues = this.getRandomPokemonValues(pokemon);
+    const pokemonInstanceValues =
+      PokemonRandomizer.getRandomPokemonValues(pokemon);
 
     await this.invalidateActiveSpawnEvents();
 
@@ -41,26 +66,21 @@ export class PokemonSpawnService implements OnModuleInit {
           create: {
             pokemon: { connect: { id: pokemon.id } },
             level: pokemonInstanceValues.level,
-            shiny: pokemonInstanceValues.shiny, // 1 in 255 chance for shiny
+            shiny: pokemonInstanceValues.shiny,
             gender: pokemonInstanceValues.gender,
           },
         },
       },
     });
 
-    let rarityString: string = 'wildes';
-    if (pokemon.pokemonSpecies.isLegendary) {
-      rarityString = '⭐legendäres⭐';
-    } else if (pokemon.pokemonSpecies.isMythical) {
-      rarityString = '🌟mythisches🌟';
-    }
-
-    let message = `Ein ${rarityString} ${pokemon.displayNameDe}${this.getGenderSymbol(pokemonInstanceValues.gender)} Level ${pokemonInstanceValues.level} ${pokemonInstanceValues.shiny ? '✨Shiny✨ ' : ''}erscheint!`;
-
+    const message = PokemonMessageFormatter.getSpawnMessage(
+      pokemon,
+      pokemonInstanceValues,
+    );
     await this.twitchService.sendChatMessage(message);
   }
 
-  async getRandomPokemon() {
+  async getRandomPokemon(): Promise<PokemonWithSpecies | undefined> {
     const randomId = Math.floor(Math.random() * 151) + 1; // Pokémon IDs range from 1 to 151
     const pokemon = await this.prisma.pokemon.findUnique({
       where: { id: randomId },
@@ -84,59 +104,7 @@ export class PokemonSpawnService implements OnModuleInit {
       this.logger.warn(`PokemonSpecies for Pokemon ID ${randomId} not found`);
       return;
     }
-    return pokemon;
-  }
-
-  getRandomPokemonValues(
-    pokemon: {
-      pokemonSpecies: {
-        genderRate: number;
-        isBaby: boolean;
-        isLegendary: boolean;
-        isMythical: boolean;
-        captureRate: number;
-      };
-    } & {
-      id: number;
-      name: string;
-      displayName: string;
-      displayNameDe: string;
-      type1: string;
-      type2: string | null;
-      pokemonSpeciesId: number;
-    },
-  ): {
-    level: number;
-    shiny: boolean;
-    gender: 'MALE' | 'FEMALE' | 'GENDERLESS';
-  } {
-    const level = Math.floor(Math.random() * 100) + 1; // Random level between 1 and 100
-    const shiny = Math.floor(Math.random() * 255) + 1 === 1; // Random level between 1 and 255
-
-    const genderRate = pokemon.pokemonSpecies.genderRate;
-    let gender: 'MALE' | 'FEMALE' | 'GENDERLESS';
-    if (genderRate === -1) {
-      gender = 'GENDERLESS';
-    } else if (genderRate === 0) {
-      gender = 'MALE';
-    } else if (genderRate === 8) {
-      gender = 'FEMALE';
-    } else {
-      // 1-7: female chance = genderRate/8
-      const roll = Math.floor(Math.random() * 8); // 0-7
-      gender = roll < genderRate ? 'FEMALE' : 'MALE';
-    }
-    return { level, shiny, gender };
-  }
-
-  getGenderSymbol(gender: 'MALE' | 'FEMALE' | 'GENDERLESS') {
-    if (gender === 'MALE') {
-      return '♂️';
-    } else if (gender === 'FEMALE') {
-      return '♀️';
-    } else {
-      return '⚧️'; // Genderless
-    }
+    return pokemon as PokemonWithSpecies;
   }
 
   async invalidateActiveSpawnEvents() {

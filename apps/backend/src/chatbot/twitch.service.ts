@@ -11,6 +11,7 @@ import { ChatClient } from '@twurple/chat';
 import { promises as fs } from 'fs';
 import { PokemonCatchService } from './pokemon/pokemon-catch.service';
 import { PokemonSpawnService } from './pokemon/pokemon-spawn.service';
+import * as process from 'node:process';
 
 @Injectable()
 export class TwitchService implements OnModuleInit {
@@ -40,10 +41,8 @@ export class TwitchService implements OnModuleInit {
       obtainmentTimestamp: 0,
     };
 
-    // 1. Create provider (no onRefresh here!)
     this.authProvider = new RefreshingAuthProvider({ clientId, clientSecret });
 
-    // 2. Persist refreshed tokens
     this.authProvider.onRefresh(async (userId, newTokenData) => {
       try {
         await fs.writeFile(
@@ -60,19 +59,22 @@ export class TwitchService implements OnModuleInit {
       }
     });
 
-    // 3. Register bot user & mark it as the chat token
     await this.authProvider.addUserForToken(tokenData, ['chat']);
 
-    // 4. Create ChatClient & connect
     this.chatClient = new ChatClient({
       authProvider: this.authProvider,
       channels: [channel],
     });
 
     // Optional: log connection lifecycle
-    this.chatClient.onConnect(() =>
-      this.logger.log('Connected to Twitch chat.'),
-    );
+    this.chatClient.onConnect(() => {
+      this.logger.log('Connected to Twitch chat.');
+      if (process.env.node_env === 'development') {
+        this.spawnPokemonInterval = setInterval(() => {
+          this.pokemonSpawnService.spawnRandomPokemon();
+        }, 10 * 1000); // Spawn ten seconds
+      }
+    });
     this.chatClient.onDisconnect((manually, reason) =>
       this.logger.warn(
         `Disconnected from Twitch chat (${manually ? 'manual' : 'error'}). ${reason ?? ''}`,
@@ -96,7 +98,7 @@ export class TwitchService implements OnModuleInit {
         } else if (text.trim().toLowerCase() === '!autospawn') {
           this.spawnPokemonInterval = setInterval(() => {
             this.pokemonSpawnService.spawnRandomPokemon();
-          }, 30 * 1000); // Spawn thirty seconds
+          }, 60 * 1000); // Spawn sixty seconds
           this.logger.log('Auto-spawn started.');
         } else if (text.trim().toLowerCase() === '!stopautospawn') {
           if (this.spawnPokemonInterval) {
