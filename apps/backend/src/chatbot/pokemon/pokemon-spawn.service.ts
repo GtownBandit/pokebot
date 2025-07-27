@@ -8,8 +8,8 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { TwitchService } from '../twitch.service';
-import { PokemonRandomizer } from './spawn-helpers/pokemon-randomizer.helper';
-import { PokemonMessageFormatter } from './spawn-helpers/pokemon-message-formatter.helper';
+import { PokemonRandomizer } from './helpers/spawn-helpers/pokemon-randomizer.helper';
+import { PokemonMessageFormatter } from './helpers/spawn-helpers/pokemon-message-formatter.helper';
 
 // --- Types and Interfaces ---
 // Prisma-generated types (imported from @prisma/client)

@@ -9,6 +9,35 @@ import {
 import { PrismaService } from '../../../prisma/prisma.service';
 import { TwitchService } from '../twitch.service';
 import { ChatMessage } from '@twurple/chat';
+import {
+  Pokemon,
+  PokemonInstance,
+  PokemonSpecies,
+  SpawnEvent,
+} from '@prisma/client';
+import { PokemonCatchRandomizer } from './helpers/catch-helpers/pokemon-catch-randomizer.helper';
+import { PokemonCatchMessageFormatter } from './helpers/catch-helpers/pokemon-catch-message-formatter.helper';
+
+// --- Types and Interfaces ---
+export interface SpawnEventWithInstanceAndSpecies extends SpawnEvent {
+  pokemonInstance: PokemonInstanceWithPokemonAndSpecies;
+}
+
+export interface PokemonInstanceWithPokemonAndSpecies extends PokemonInstance {
+  pokemon: PokemonWithSpecies;
+}
+
+export interface PokemonWithSpecies extends Pokemon {
+  pokemonSpecies: PokemonSpecies;
+}
+
+export interface CatchRollResult {
+  roll: number;
+  level: number;
+  captureRate: number;
+  escaped: boolean;
+  success: boolean;
+}
 
 @Injectable()
 export class PokemonCatchService implements OnModuleInit {
@@ -66,31 +95,27 @@ export class PokemonCatchService implements OnModuleInit {
 
     if (!spawnEvent) {
       await this.twitchService.sendChatMessage(
-        'Es gibt kein aktives Pokémon zum Fangen!',
+        PokemonCatchMessageFormatter.getNoActivePokemonMessage(),
       );
       return;
     }
 
-    const roll = Math.floor(Math.random() * 100) + 1;
-    const level = spawnEvent.pokemonInstance.level;
+    const catchResult = PokemonCatchRandomizer.getCatchRoll(
+      spawnEvent as SpawnEventWithInstanceAndSpecies,
+    );
     const pokemonName = spawnEvent.pokemonInstance.pokemon.displayNameDe;
-    const captureRate =
-      spawnEvent.pokemonInstance.pokemon.pokemonSpecies.captureRate;
-    const escapeChance = (1 - captureRate / 255) * (1 / 3);
-    const escaped = Math.random() < escapeChance;
-    // Create catch roll event with userId
+
     await this.prisma.catchRollEvent.create({
       data: {
         userId: user.id,
-        roll,
+        roll: catchResult.roll,
         spawnEventId: spawnEvent.id,
-        success: roll >= level,
-        pokemonRanAway: escaped,
+        success: catchResult.success,
+        pokemonRanAway: catchResult.escaped,
       },
     });
 
-    if (roll >= level) {
-      // Mark as caught (customize as needed)
+    if (catchResult.success) {
       await this.prisma.spawnEvent.update({
         where: { id: spawnEvent.id },
         data: {
@@ -102,22 +127,32 @@ export class PokemonCatchService implements OnModuleInit {
           },
         },
       });
-
       await this.twitchService.sendChatMessage(
-        `${user.username} hat ${pokemonName} gefangen! (Wurf: ${roll} / Level: ${level})`,
+        PokemonCatchMessageFormatter.getCatchSuccessMessage(
+          user.username,
+          pokemonName,
+          catchResult,
+        ),
       );
     } else {
-      if (escaped) {
+      if (catchResult.escaped) {
         await this.prisma.spawnEvent.update({
           where: { id: spawnEvent.id },
           data: { expiresAt: new Date() },
         });
         await this.twitchService.sendChatMessage(
-          `${pokemonName} ist entkommen! (Wurf: ${roll} / Level: ${level})`,
+          PokemonCatchMessageFormatter.getEscapeMessage(
+            pokemonName,
+            catchResult,
+          ),
         );
       } else {
         await this.twitchService.sendChatMessage(
-          `${user.username} verfehlt das ${pokemonName}... (Wurf: ${roll} / Level: ${level})`,
+          PokemonCatchMessageFormatter.getCatchFailMessage(
+            user.username,
+            pokemonName,
+            catchResult,
+          ),
         );
       }
     }

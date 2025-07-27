@@ -2,7 +2,7 @@ import {
   PokemonGender,
   PokemonInstanceValues,
   PokemonWithSpecies,
-} from '../pokemon-spawn.service';
+} from '../../pokemon-spawn.service';
 
 export class PokemonMessageFormatter {
   static getGenderSymbol(gender: PokemonGender): string {

@@ -2,7 +2,7 @@ import {
   PokemonGender,
   PokemonInstanceValues,
   PokemonWithSpecies,
-} from '../pokemon-spawn.service';
+} from '../../pokemon-spawn.service';
 
 export class PokemonRandomizer {
   static getRandomPokemonValues(
