@@ -26,5 +26,3 @@ export const appConfig: ApplicationConfig = {
     ),
   ],
 };
-
-// Moved to core/app.config.ts
