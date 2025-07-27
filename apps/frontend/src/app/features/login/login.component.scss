@@ -1,0 +1,34 @@
+.background-container.clouds { z-index: 20; }
+.background-container.water-sky { z-index: 10; }
+.background-container.ground { z-index: 40; }
+
+.background-container {
+  position: absolute;
+  width: 100vw;
+  height: 100%;
+  overflow: hidden;
+  top: 0;
+  left: 0;
+}
+
+.background-scroll {
+  display: flex;
+  width: 200vw;
+  height: 100%;
+  object-fit: cover;
+  animation: scroll-right 60s linear infinite;
+}
+
+.background-scroll.clouds { animation-duration: 60s; }
+.background-scroll.water-sky { animation-duration: 90s; }
+.background-scroll.ground { animation-duration: 20s; }
+
+.background-scroll img {
+  height: 100%;
+  object-fit: cover;
+}
+
+@keyframes scroll-right {
+  0% { transform: translateX(-100vw); }
+  100% { transform: translateX(0); }
+}

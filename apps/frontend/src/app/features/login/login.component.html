@@ -1,1 +1,35 @@
-<button (click)="login()">Login</button>
+<div
+  class="w-screen h-screen bg-[#80ccfc] flex flex-col items-center justify-center"
+>
+  <button
+    class="text-3xl bg-neutral-600 px-8 py-4 rounded-2xl z-50"
+    (click)="login()"
+  >
+    Login
+  </button>
+</div>
+
+<div class="background-container clouds">
+  <div class="background-scroll clouds">
+    <img ngSrc="assets/login/clouds.png" height="1080" width="3840" />
+    <img ngSrc="assets/login/clouds.png" height="1080" width="3840" />
+  </div>
+</div>
+<div class="background-container water-sky">
+  <div class="background-scroll water-sky">
+    <img ngSrc="assets/login/water-sky-sun.png" height="1080" width="3840" />
+    <img ngSrc="assets/login/water-sky.png" height="1080" width="3840" />
+  </div>
+</div>
+<div class="background-container ground">
+  <div class="background-scroll ground">
+    <img ngSrc="assets/login/ground.png" height="1080" width="3840" />
+    <img ngSrc="assets/login/ground.png" height="1080" width="3840" />
+  </div>
+</div>
+<img
+  ngSrc="assets/login/brendan.gif"
+  class="absolute bottom-50 right-80 z-50 scale-200"
+  height="192"
+  width="192"
+/>
