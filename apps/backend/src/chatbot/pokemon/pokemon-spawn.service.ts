@@ -145,7 +145,6 @@ export class PokemonSpawnService implements OnModuleInit {
         expiresAt: null,
         channel: process.env.TWITCH_CHANNEL!,
       },
-      orderBy: { expiresAt: 'desc' },
     });
 
     if (activeSpawnEvents.length > 0) {
