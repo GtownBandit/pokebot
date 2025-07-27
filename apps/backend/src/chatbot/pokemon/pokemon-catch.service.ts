@@ -1,18 +1,28 @@
 // apps/backend/src/chatbot/pokemon/pokemon-catch.service.ts
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  Logger,
+  OnModuleInit,
+} from '@nestjs/common';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { TwitchService } from '../twitch.service';
 import { ChatMessage } from '@twurple/chat';
 
 @Injectable()
-export class PokemonCatchService {
-  // private readonly logger = new Logger(PokemonCatchService.name);
+export class PokemonCatchService implements OnModuleInit {
+  private readonly logger = new Logger(PokemonCatchService.name);
 
   constructor(
     private prisma: PrismaService,
     @Inject(forwardRef(() => TwitchService))
     private twitchService: TwitchService,
   ) {}
+
+  async onModuleInit() {
+    this.logger.log('PokemonSpawnService initialized');
+  }
 
   async tryCatchPokemon(message: ChatMessage) {
     // Find or create user by username

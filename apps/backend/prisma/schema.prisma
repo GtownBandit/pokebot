@@ -7,56 +7,75 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Gender {
+  MALE
+  FEMALE
+  GENDERLESS
+}
+
 model Pokemon {
-  id                  Int          @id @default(autoincrement())
-  name                String       @unique
-  displayName         String
-  displayNameDe       String
-  type1               String
-  type2               String?
-  pokemonInstances    PokemonInstance[]
+  id               Int               @id @default(autoincrement())
+  name             String            @unique
+  displayName      String
+  displayNameDe    String
+  type1            String
+  type2            String?
+  pokemonInstances PokemonInstance[]
+  pokemonSpeciesId Int
+  pokemonSpecies   PokemonSpecies    @relation(fields: [pokemonSpeciesId], references: [id])
+}
+
+model PokemonSpecies {
+  id          Int       @id @default(autoincrement())
+  genderRate  Int
+  isBaby      Boolean
+  isLegendary Boolean
+  isMythical  Boolean
+  captureRate Int
+  pokemon     Pokemon[]
 }
 
 model PokemonInstance {
-  id         Int      @id @default(autoincrement())
-  pokemonId  Int
-  pokemon    Pokemon  @relation(fields: [pokemonId], references: [id])
-  level      Int
-  userId     Int?
-  user       User?     @relation(fields: [userId], references: [id])
-  nickname   String?
-  shiny      Boolean  @default(false)
+  id          Int         @id @default(autoincrement())
+  pokemonId   Int
+  pokemon     Pokemon     @relation(fields: [pokemonId], references: [id])
+  level       Int
+  userId      Int?
+  user        User?       @relation(fields: [userId], references: [id])
+  nickname    String?
+  shiny       Boolean     @default(false)
+  gender      Gender
   spawnEvents SpawnEvent?
 }
 
 model SpawnEvent {
-  id                    Int      @id @default(autoincrement())
-  channel             String
-  pokemonInstanceId     Int               @unique
-  pokemonInstance       PokemonInstance   @relation(fields: [pokemonInstanceId], references: [id])
-  spawnedAt       DateTime @default(now())
-  expiresAt       DateTime?
-  catchRollEvents CatchRollEvent[]
+  id                Int              @id @default(autoincrement())
+  channel           String
+  pokemonInstanceId Int              @unique
+  pokemonInstance   PokemonInstance  @relation(fields: [pokemonInstanceId], references: [id])
+  spawnedAt         DateTime         @default(now())
+  expiresAt         DateTime?
+  catchRollEvents   CatchRollEvent[]
 }
 
 model CatchRollEvent {
-  id              Int      @id @default(autoincrement())
-  spawnEventId    Int
-  spawnEvent      SpawnEvent  @relation(fields: [spawnEventId], references: [id])
-  userId          Int
-  user            User     @relation(fields: [userId], references: [id])
-  roll            Int
-  success         Boolean
-  pokemonRanAway         Boolean @default(false)
-  rolledAt        DateTime @default(now())
+  id             Int        @id @default(autoincrement())
+  spawnEventId   Int
+  spawnEvent     SpawnEvent @relation(fields: [spawnEventId], references: [id])
+  userId         Int
+  user           User       @relation(fields: [userId], references: [id])
+  roll           Int
+  success        Boolean
+  pokemonRanAway Boolean    @default(false)
+  rolledAt       DateTime   @default(now())
 }
 
 model User {
-  id                    Int      @id @default(autoincrement())
-  twitchId              String   @unique
-  username              String   @unique
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
-  catchRollEvents       CatchRollEvent[]
-  pokemonInstances      PokemonInstance[]
+  id               Int               @id @default(autoincrement())
+  twitchId         String            @unique
+  username         String            @unique
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  catchRollEvents  CatchRollEvent[]
+  pokemonInstances PokemonInstance[]
 }

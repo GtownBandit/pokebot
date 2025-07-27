@@ -9,6 +9,9 @@ async function main() {
   const gameClient = new GameClient();
   const generation = await gameClient.getGenerationById(1);
   const pokemonSpeciesArray = generation.pokemon_species;
+
+  // Add all Pokémon from Generation 1 to the database
+  console.log('Inserting Pokémon from Generation 1...');
   for (let i = 0; i < pokemonSpeciesArray.length; i++) {
     let pokemon = await pokemonClient.getPokemonByName(
       pokemonSpeciesArray[i].name,
@@ -17,7 +20,7 @@ async function main() {
       pokemonSpeciesArray[i].name,
     );
 
-    const data = {
+    const pokemonData = {
       id: pokemon.id,
       name: pokemon.name,
       displayName:
@@ -28,10 +31,21 @@ async function main() {
           ?.name || '',
       type1: pokemon.types[0].type.name,
       type2: pokemon.types[1]?.type.name || null,
+      pokemonSpeciesId: pokemonSpecies.id,
     };
 
-    await prisma.pokemon.create({ data });
-    console.log('Inserted Pokémon:', data.name);
+    const pokemonSpeciesData = {
+      id: pokemonSpecies.id,
+      genderRate: pokemonSpecies.gender_rate,
+      isBaby: pokemonSpecies.is_baby,
+      isLegendary: pokemonSpecies.is_legendary,
+      isMythical: pokemonSpecies.is_mythical,
+      captureRate: pokemonSpecies.capture_rate,
+    };
+
+    await prisma.pokemonSpecies.create({ data: pokemonSpeciesData });
+    await prisma.pokemon.create({ data: pokemonData });
+    console.log('Inserted Pokémon:', pokemonData.name);
   }
 }
 
