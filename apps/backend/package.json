@@ -1,7 +1,7 @@
 {
   "name": "backend",
   "version": "0.0.1",
-  "description": "The backend for Pokebot frontend & a Twitch bot for Pokémon spawning.",
+  "description": "The backend for Pokebot frontend and a Twitch bot for Pokémon spawning.",
   "author": "gtownbandit",
   "private": true,
   "license": "UNLICENSED",
