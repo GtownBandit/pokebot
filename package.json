@@ -13,7 +13,7 @@
     "prod:backend:build": "pnpm --filter backend build",
     "dev:frontend": "pnpm --filter frontend start",
     "dev": "concurrently -k \"pnpm dev:backend\" \"pnpm dev:frontend\"",
-    "seed": "dotenv -e ../../.env -- ts-node ../../libs/prisma/seed.ts",
+    "seed": "dotenv -e ../../.env -- ts-node ./prisma/seed.ts",
     "prisma:format": "prisma format --schema=./prisma/schema.prisma",
     "prisma:migrate:dev": "prisma migrate dev --schema=./prisma/schema.prisma",
     "prisma:generate": "prisma generate --schema=./prisma/schema.prisma"
