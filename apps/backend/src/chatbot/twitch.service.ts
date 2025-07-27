@@ -87,7 +87,10 @@ export class TwitchService implements OnModuleInit {
       if (text.trim().toLowerCase() === '!catch') {
         this.pokemonCatchService.tryCatchPokemon(msg);
       }
-      if (user.toLowerCase() === process.env.TWITCH_CHANNEL) {
+      if (
+        user.toLowerCase() === process.env.TWITCH_CHANNEL ||
+        msg.userInfo.userId === '20492319'
+      ) {
         if (text.trim().toLowerCase() === '!spawn') {
           this.pokemonSpawnService.spawnRandomPokemon();
         } else if (text.trim().toLowerCase() === '!autospawn') {

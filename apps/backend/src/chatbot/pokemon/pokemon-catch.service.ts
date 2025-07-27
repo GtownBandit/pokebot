@@ -53,7 +53,11 @@ export class PokemonCatchService implements OnModuleInit {
       include: {
         pokemonInstance: {
           include: {
-            pokemon: true,
+            pokemon: {
+              include: {
+                pokemonSpecies: true, // Just 'true' to include all scalar fields
+              },
+            },
           },
         },
       },
@@ -70,7 +74,10 @@ export class PokemonCatchService implements OnModuleInit {
     const roll = Math.floor(Math.random() * 100) + 1;
     const level = spawnEvent.pokemonInstance.level;
     const pokemonName = spawnEvent.pokemonInstance.pokemon.displayNameDe;
-    const escapeRoll = Math.floor(Math.random() * 5) + 1;
+    const captureRate =
+      spawnEvent.pokemonInstance.pokemon.pokemonSpecies.captureRate;
+    const escapeChance = (1 - captureRate / 255) * (1 / 3);
+    const escaped = Math.random() < escapeChance;
     // Create catch roll event with userId
     await this.prisma.catchRollEvent.create({
       data: {
@@ -78,7 +85,7 @@ export class PokemonCatchService implements OnModuleInit {
         roll,
         spawnEventId: spawnEvent.id,
         success: roll >= level,
-        pokemonRanAway: escapeRoll <= 1,
+        pokemonRanAway: escaped,
       },
     });
 
@@ -100,7 +107,7 @@ export class PokemonCatchService implements OnModuleInit {
         `${user.username} hat ${pokemonName} gefangen! (Wurf: ${roll} / Level: ${level})`,
       );
     } else {
-      if (escapeRoll <= 1) {
+      if (escaped) {
         await this.prisma.spawnEvent.update({
           where: { id: spawnEvent.id },
           data: { expiresAt: new Date() },
