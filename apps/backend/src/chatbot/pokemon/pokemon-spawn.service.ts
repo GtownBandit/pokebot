@@ -12,8 +12,7 @@ import { PokemonRandomizer } from './helpers/spawn-helpers/pokemon-randomizer.he
 import { PokemonMessageFormatter } from './helpers/spawn-helpers/pokemon-message-formatter.helper';
 
 // --- Types and Interfaces ---
-// Prisma-generated types (imported from @prisma/client)
-import { Pokemon, PokemonSpecies } from '@prisma/client';
+import { Pokemon, PokemonSpecies } from '@pokebot/prisma';
 
 // Gender type for clarity
 export type PokemonGender = 'MALE' | 'FEMALE' | 'GENDERLESS';
