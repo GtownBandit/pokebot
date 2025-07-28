@@ -10,3 +10,12 @@
 @theme {
   --font-pokemon: Pokemon, sans-serif;
 }
+
+@layer utilities {
+  .pokemon-title {
+    font-family: var(--font-pokemon);
+    -webkit-text-stroke: 1px #000;
+    /* fallback for browsers without text-stroke */
+    text-shadow: 0 0 2px #000, 0 0 1px #000;
+  }
+}
