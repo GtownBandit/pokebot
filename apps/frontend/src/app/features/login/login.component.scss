@@ -32,3 +32,28 @@
   0% { transform: translateX(-100vw); }
   100% { transform: translateX(0); }
 }
+
+.brendan {
+  position: absolute;
+  bottom: clamp(0px, 15vh, calc(100vh - 120px));
+  right: clamp(0px, 15vw, calc(100vw - 120px));
+  z-index: 50;
+  width: 12vw;
+  height: auto;
+  max-width: 192px;
+  max-height: 192px;
+  transform: scale(2);
+
+  @media (max-width: 600px) {
+    bottom: clamp(0px, 10vh, calc(100vh - 100px));
+    right: clamp(0px, 10vw, calc(100vw - 100px));
+    width: 28vw;
+    max-width: 120px;
+    transform: scale(1.5);
+  }
+  @media (max-height: 750px) {
+  transform: scale(1.5);
+  max-height: 100px;
+  max-width: 100px;
+}
+}
