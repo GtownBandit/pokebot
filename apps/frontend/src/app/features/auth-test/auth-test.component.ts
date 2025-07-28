@@ -3,7 +3,6 @@ import { AuthService } from '../../core';
 import { AuthService as Auth0Service } from '@auth0/auth0-angular';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Pokemon } from '../../../../../../libs/shared-types';
 import { JsonPipe } from '@angular/common';
 
 @Component({
@@ -19,15 +18,15 @@ export class AuthTestComponent {
     private http: HttpClient,
   ) {}
 
-  apiResponse: Pokemon[] | null = null;
+  apiResponse: any = null;
 
   get twitchId(): string | null {
     return this.authService.getTwitchId();
   }
 
   testAPI(): void {
-    this.http.get<Pokemon[]>(`${environment.backendURL}/pokemon`).subscribe({
-      next: (data: Pokemon[]) => {
+    this.http.get(`${environment.backendURL}/pokemon`).subscribe({
+      next: (data) => {
         console.log(data);
         this.apiResponse = data;
       },
