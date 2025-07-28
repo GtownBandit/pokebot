@@ -25,7 +25,7 @@ export class AuthTestComponent {
   }
 
   testAPI(): void {
-    this.http.get(`${environment.NG_APP_BACKEND_URL}/pokemon`).subscribe({
+    this.http.get(`${environment.backendURL}/pokemon`).subscribe({
       next: (data) => {
         console.log(data);
         this.apiResponse = data;

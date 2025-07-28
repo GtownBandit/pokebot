@@ -1,5 +1,5 @@
-import { writeFileSync } from 'fs';
-import { join } from 'path';
+import {writeFileSync} from 'fs';
+import {join} from 'path';
 
 const targetPath = join('./src/environments/environment.prod.ts');
 
@@ -9,6 +9,7 @@ export const environment = {
   authDomain: '${process.env.NG_APP_AUTH_DOMAIN}',
   authClientId: '${process.env.NG_APP_AUTH_CLIENT_ID}',
   authAudience: '${process.env.NG_APP_AUTH_AUDIENCE}',
+  backendURL: '${process.env.NG_APP_BACKEND_URL}',
 };
 `;
 

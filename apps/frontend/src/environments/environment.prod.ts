@@ -3,5 +3,5 @@ export const environment = {
   authDomain: '',
   authClientId: '',
   authAudience: '',
-  NG_APP_BACKEND_URL: '',
+  backendURL: '',
 };
