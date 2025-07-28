@@ -1,3 +1,20 @@
-<div>Your twitch id: {{ twitchId }}</div>
+<div class="p-4 bg-gray-100 rounded shadow text-center">
+  <div class="mb-4 text-lg font-semibold">Your twitch id: {{ twitchId }}</div>
 
-<button (click)="logout()">Logout</button>
+  <button
+    class="px-4 py-2 mr-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+    (click)="testAPI()"
+  >
+    Test API
+  </button>
+  <button
+    class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
+    (click)="logout()"
+  >
+    Logout
+  </button>
+</div>
+<div class="mt-5 p-4 bg-gray-100 rounded shadow text-center">
+  <div class="mb-4 text-lg font-semibold">Response:</div>
+  {{ apiResponse ? (apiResponse | json) : "No response yet" }}
+</div>

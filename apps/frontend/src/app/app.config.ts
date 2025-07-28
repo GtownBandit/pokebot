@@ -8,12 +8,14 @@ import { provideRouter } from '@angular/router';
 import { environment } from '../environments/environment';
 import { routes } from './app.routes';
 import { AuthModule } from '@auth0/auth0-angular';
+import { provideHttpClient } from '@angular/common/http';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
+    provideHttpClient(),
     importProvidersFrom(
       AuthModule.forRoot({
         domain: environment.authDomain,
