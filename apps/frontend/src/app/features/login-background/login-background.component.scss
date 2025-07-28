@@ -61,7 +61,7 @@
   bottom: clamp(0px, 10vh, calc(100vh - 120px));
   right: clamp(0px, 15vw, calc(100vw - 120px));
   z-index: 50;
-  width: 12vw;
+  width: 20vw;
   height: auto;
   max-width: 192px;
   max-height: 192px;
@@ -69,11 +69,11 @@
   @media (max-width: 600px) {
     bottom: clamp(0px, 7h, calc(100vh - 100px));
     right: clamp(0px, 10vw, calc(100vw - 100px));
-    width: 28vw;
+    width: 35vw;
     max-width: 120px;
   }
-  @media (max-height: 750px) {
-    max-height: 100px;
-    max-width: 100px;
-  }
+  //@media (max-height: 750px) {
+  //  max-height: 100px;
+  //  max-width: 100px;
+  //}
 }
