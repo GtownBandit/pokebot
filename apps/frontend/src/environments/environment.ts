@@ -3,5 +3,5 @@ export const environment = {
   authDomain: 'https://auth.pokebot.at',
   authClientId: 'YtVam2xqYB7b5VX3sJLHMiILFrB7DJRK',
   authAudience: 'https://pokebot.at/api',
-  backendURL: 'http://localhost:3000',
+  NG_APP_BACKEND_URL: 'http://localhost:3000',
 };
