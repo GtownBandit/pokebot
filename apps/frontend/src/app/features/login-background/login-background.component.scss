@@ -58,7 +58,7 @@
 .brendan {
   position: absolute;
   animation: brendan-bob 15s ease-in-out infinite;
-  bottom: clamp(0px, 15vh, calc(100vh - 120px));
+  bottom: clamp(0px, 10vh, calc(100vh - 120px));
   right: clamp(0px, 15vw, calc(100vw - 120px));
   z-index: 50;
   width: 12vw;
@@ -67,7 +67,7 @@
   max-height: 192px;
 
   @media (max-width: 600px) {
-    bottom: clamp(0px, 10vh, calc(100vh - 100px));
+    bottom: clamp(0px, 7h, calc(100vh - 100px));
     right: clamp(0px, 10vw, calc(100vw - 100px));
     width: 28vw;
     max-width: 120px;
