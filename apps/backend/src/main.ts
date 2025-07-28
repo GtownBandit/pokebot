@@ -10,6 +10,12 @@ async function bootstrap() {
       origin: 'http://localhost:4200',
       credentials: true,
     });
+  } else if (process.env.NODE_ENV === 'production') {
+    const allowedOrigins = ['https://www.pokebot.at', 'https://pokebot.at'];
+    app.enableCors({
+      origin: allowedOrigins,
+      credentials: true,
+    });
   }
 
   await app.listen(process.env.PORT ?? 3000);
