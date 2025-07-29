@@ -4,6 +4,7 @@ import { AuthService as Auth0Service } from '@auth0/auth0-angular';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { JsonPipe } from '@angular/common';
+import { Pokemon } from '../../../prisma-types';
 
 @Component({
   selector: 'app-auth-test',
@@ -18,14 +19,14 @@ export class AuthTestComponent {
     private http: HttpClient,
   ) {}
 
-  apiResponse: any = null;
+  apiResponse: Pokemon[] | null = null;
 
   get twitchId(): string | null {
     return this.authService.getTwitchId();
   }
 
   testAPI(): void {
-    this.http.get(`${environment.backendURL}/pokemon`).subscribe({
+    this.http.get<Pokemon[]>(`${environment.backendURL}/pokemon`).subscribe({
       next: (data) => {
         console.log(data);
         this.apiResponse = data;
