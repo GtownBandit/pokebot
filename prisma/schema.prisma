@@ -4,7 +4,6 @@ generator client {
 
 generator sharedTypes {
   provider = "prisma-client-js"
-  output   = "../libs/shared-types" // Adjust the path as needed
 }
 
 datasource db {
