@@ -38,6 +38,8 @@ export class AuthTestComponent {
   }
 
   logout(): void {
-    this.auth0Service.logout();
+    this.auth0Service.logout({
+      logoutParams: { returnTo: environment.frontendURL },
+    });
   }
 }

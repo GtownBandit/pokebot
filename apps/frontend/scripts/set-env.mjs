@@ -10,6 +10,7 @@ export const environment = {
   authClientId: '${process.env.NG_APP_AUTH_CLIENT_ID}',
   authAudience: '${process.env.NG_APP_AUTH_AUDIENCE}',
   backendURL: '${process.env.NG_APP_BACKEND_URL}',
+  frontendURL: '${process.env.NG_APP_FRONTEND_URL}',
 };
 `;
 
