@@ -1,23 +1,19 @@
 import { Routes } from '@angular/router';
 import { AuthTestComponent, LoginComponent } from './features';
-import { AuthGuard, AuthResolver } from './core';
+import { AuthGuard, UnauthGuard } from './core';
 
 export const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent,
-    resolve: { auth: AuthResolver },
+    canActivate: [UnauthGuard],
   },
   {
     path: '',
     canActivate: [AuthGuard],
     children: [
-      {
-        path: 'dashboard',
-        component: AuthTestComponent,
-      },
-      { path: '**', redirectTo: 'dashboard', pathMatch: 'full' },
-      // Add future protected routes here
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: 'dashboard', component: AuthTestComponent },
     ],
   },
   { path: '**', redirectTo: 'login', pathMatch: 'full' },
