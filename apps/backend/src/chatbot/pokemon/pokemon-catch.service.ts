@@ -62,14 +62,14 @@ export class PokemonCatchService implements OnModuleInit {
       user = await this.prisma.user.create({
         data: {
           twitchId: message.userInfo.userId,
-          username: message.userInfo.userName,
+          username: message.userInfo.displayName,
         },
       });
-    } else if (user.username !== message.userInfo.userName) {
+    } else if (user.username !== message.userInfo.displayName) {
       // Update username if it has changed
       user = await this.prisma.user.update({
         where: { id: user.id },
-        data: { username: message.userInfo.userName },
+        data: { username: message.userInfo.displayName },
       });
     }
 

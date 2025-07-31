@@ -5,6 +5,7 @@ import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { JsonPipe } from '@angular/common';
 import { Pokemon } from '../../../prisma-types';
+import { UserService } from '../../shared/services/user.service';
 
 @Component({
   selector: 'app-auth-test',
@@ -16,13 +17,14 @@ export class AuthTestComponent {
   constructor(
     private authService: AuthService,
     private auth0Service: Auth0Service,
+    private userService: UserService,
     private http: HttpClient,
   ) {}
 
   apiResponse: Pokemon[] | null = null;
 
   get twitchId(): string | null {
-    return this.authService.getTwitchId();
+    return this.userService.user?.twitchId ?? null;
   }
 
   testAPI(): void {

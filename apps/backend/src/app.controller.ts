@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Post,
   Req,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
@@ -73,9 +74,10 @@ export class AppController {
   async createUser(
     @Req() req,
     @Body() body: { twitchId: string; username: string },
-  ): Promise<User> {
+    @Res() res,
+  ): Promise<any> {
     const { twitchId, username } = body;
-    const jwtTwitchId = req.user?.info;
+    const jwtTwitchId = req.user?.userId;
     if (!jwtTwitchId || twitchId !== jwtTwitchId) {
       throw new HttpException(
         'twitchId does not match authenticated user',
@@ -90,7 +92,26 @@ export class AppController {
     }
     // Check if user exists
     let user = await this.prisma.user.findUnique({ where: { twitchId } });
-    if (user) return user;
+
+    if (user) {
+      // If username has changed, update it if not taken
+      if (user.username !== username) {
+        const usernameExists = await this.prisma.user.findUnique({
+          where: { username },
+        });
+        if (usernameExists) {
+          throw new HttpException(
+            'Username already taken',
+            HttpStatus.CONFLICT,
+          );
+        }
+        user = await this.prisma.user.update({
+          where: { twitchId },
+          data: { username },
+        });
+      }
+      return res.status(200).json(user);
+    }
     // Check for username conflict
     const usernameExists = await this.prisma.user.findUnique({
       where: { username },
@@ -101,7 +122,7 @@ export class AppController {
     // Create user
     try {
       user = await this.prisma.user.create({ data: { twitchId, username } });
-      return user;
+      return res.status(201).json(user);
     } catch (e) {
       throw new HttpException(
         'Failed to create user',
