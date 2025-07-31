@@ -26,6 +26,13 @@ export class AuthTestComponent {
   }
 
   testAPI(): void {
+    this.auth0Service.getAccessTokenSilently().subscribe((accessToken) => {
+      console.log(accessToken);
+    });
+    this.auth0Service.isAuthenticated$.subscribe((isAuthenticated) => {
+      console.log(isAuthenticated);
+    });
+    console.log(environment.backendURL + '/*');
     this.http.get<Pokemon[]>(`${environment.backendURL}/pokemon`).subscribe({
       next: (data) => {
         console.log(data);
