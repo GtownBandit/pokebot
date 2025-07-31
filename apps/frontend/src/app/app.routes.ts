@@ -16,8 +16,9 @@ export const routes: Routes = [
         path: 'dashboard',
         component: AuthTestComponent,
       },
+      { path: '**', redirectTo: 'dashboard', pathMatch: 'full' },
       // Add future protected routes here
     ],
   },
-  { path: '**', redirectTo: 'dashboard', pathMatch: 'full' },
+  { path: '**', redirectTo: 'login', pathMatch: 'full' },
 ];
