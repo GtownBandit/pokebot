@@ -33,15 +33,17 @@ export class AuthTestComponent {
       console.log(isAuthenticated);
     });
     console.log(environment.backendURL + '/*');
-    this.http.get<Pokemon[]>(`${environment.backendURL}/pokemon`).subscribe({
-      next: (data) => {
-        console.log(data);
-        this.apiResponse = data;
-      },
-      error: (error) => {
-        console.error('API fetch error:', error);
-      },
-    });
+    this.http
+      .get<Pokemon[]>(`${environment.backendURL}/pokemon-instances`)
+      .subscribe({
+        next: (data) => {
+          console.log(data);
+          this.apiResponse = data;
+        },
+        error: (error) => {
+          console.error('API fetch error:', error);
+        },
+      });
   }
 
   logout(): void {

@@ -21,7 +21,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: any) {
-    return payload;
+  validate(payload: any) {
+    const sub = payload.sub; // "oauth2|twitch|12345678"
+    const userId = sub.split('|').pop();
+    return { ...payload, userId };
   }
 }
