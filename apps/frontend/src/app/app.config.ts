@@ -7,11 +7,12 @@ import {
 import { provideRouter } from '@angular/router';
 import { environment } from '../environments/environment';
 import { routes } from './app.routes';
-import { AuthModule } from '@auth0/auth0-angular';
-import { provideHttpClient } from '@angular/common/http';
+import { AuthHttpInterceptor, AuthModule } from '@auth0/auth0-angular';
+import { HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true },
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
@@ -23,6 +24,13 @@ export const appConfig: ApplicationConfig = {
         authorizationParams: {
           redirect_uri: window.location.origin,
           audience: environment.authAudience,
+        },
+        httpInterceptor: {
+          allowedList: [
+            {
+              uri: environment.backendURL + '/*',
+            },
+          ],
         },
       }),
     ),
