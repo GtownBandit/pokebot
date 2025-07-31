@@ -1,8 +1,10 @@
 import {
+  Body,
   Controller,
   Get,
   HttpException,
   HttpStatus,
+  Post,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -35,6 +37,7 @@ export class AppController {
   @Get('pokemon-instances')
   async getPokemonInstances(@Req() req): Promise<PokemonInstance[]> {
     const twitchId = req.user.userId;
+    console.log(req.user);
     const userWithInstances = await this.prisma.user.findUnique({
       where: { twitchId: twitchId },
       include: { pokemonInstances: true },
@@ -63,5 +66,47 @@ export class AppController {
   @Get('spawn-events')
   async getSpawnEvents(): Promise<SpawnEvent[]> {
     return this.prisma.spawnEvent.findMany();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('user')
+  async createUser(
+    @Req() req,
+    @Body() body: { twitchId: string; username: string },
+  ): Promise<User> {
+    const { twitchId, username } = body;
+    const jwtTwitchId = req.user?.info;
+    if (!jwtTwitchId || twitchId !== jwtTwitchId) {
+      throw new HttpException(
+        'twitchId does not match authenticated user',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+    if (!twitchId || !username) {
+      throw new HttpException(
+        'Missing twitchId or username',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    // Check if user exists
+    let user = await this.prisma.user.findUnique({ where: { twitchId } });
+    if (user) return user;
+    // Check for username conflict
+    const usernameExists = await this.prisma.user.findUnique({
+      where: { username },
+    });
+    if (usernameExists) {
+      throw new HttpException('Username already taken', HttpStatus.CONFLICT);
+    }
+    // Create user
+    try {
+      user = await this.prisma.user.create({ data: { twitchId, username } });
+      return user;
+    } catch (e) {
+      throw new HttpException(
+        'Failed to create user',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }
