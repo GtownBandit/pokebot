@@ -21,7 +21,6 @@ export class UserResolver implements Resolve<any> {
       take(1),
       switchMap((user: any) => {
         const username = user.twitch_username;
-        console.log(user);
         let twitchId = null;
         if (user?.sub) {
           const segments = user.sub.split('|');
