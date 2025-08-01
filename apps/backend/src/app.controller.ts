@@ -17,7 +17,7 @@ import {
   PokemonInstance,
   SpawnEvent,
   User,
-} from '@prisma/client';
+} from '@prisma/generated-client';
 
 @Controller()
 export class AppController {

@@ -14,7 +14,7 @@ import {
   PokemonInstance,
   PokemonSpecies,
   SpawnEvent,
-} from '@prisma/client';
+} from '@prisma/generated-client';
 import { PokemonCatchRandomizer } from './helpers/catch-helpers/pokemon-catch-randomizer.helper';
 import { PokemonCatchMessageFormatter } from './helpers/catch-helpers/pokemon-catch-message-formatter.helper';
 

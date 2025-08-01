@@ -6,7 +6,7 @@ import type {
   PokemonSpecies,
   SpawnEvent,
   User,
-} from '../../../../prisma/generated/client';
+} from '@prisma/generated-client';
 
 export type {
   CatchRollEvent,
