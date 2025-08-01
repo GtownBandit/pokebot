@@ -4,6 +4,7 @@ import { User } from '../../../prisma-types';
 @Injectable({ providedIn: 'root' })
 export class UserService {
   private _user: User | null = null;
+  private _profilePictureUrl: string | null = null;
 
   get user(): User | null {
     return this._user;
@@ -13,7 +14,16 @@ export class UserService {
     this._user = user;
   }
 
+  get profilePictureUrl(): string | null {
+    return this._profilePictureUrl;
+  }
+
+  set profilePictureUrl(url: string | null) {
+    this._profilePictureUrl = url;
+  }
+
   clear(): void {
     this._user = null;
+    this._profilePictureUrl = null;
   }
 }

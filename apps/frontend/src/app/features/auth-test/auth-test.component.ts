@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../../core';
-import { AuthService as Auth0Service } from '@auth0/auth0-angular';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { JsonPipe } from '@angular/common';
 import { Pokemon } from '../../../prisma-types';
 import { UserService } from '../../shared/services/user.service';
+import { AuthService } from '@auth0/auth0-angular';
 
 @Component({
   selector: 'app-auth-test',
@@ -16,7 +15,6 @@ import { UserService } from '../../shared/services/user.service';
 export class AuthTestComponent {
   constructor(
     private authService: AuthService,
-    private auth0Service: Auth0Service,
     private userService: UserService,
     private http: HttpClient,
   ) {}
@@ -42,7 +40,7 @@ export class AuthTestComponent {
   }
 
   logout(): void {
-    this.auth0Service.logout({
+    this.authService.logout({
       logoutParams: { returnTo: environment.frontendURL },
     });
   }

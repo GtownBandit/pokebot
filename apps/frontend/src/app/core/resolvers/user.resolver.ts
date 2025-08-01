@@ -21,6 +21,7 @@ export class UserResolver implements Resolve<any> {
       take(1),
       switchMap((user: any) => {
         const username = user.twitch_username;
+
         let twitchId = null;
         if (user?.sub) {
           const segments = user.sub.split('|');
@@ -36,6 +37,7 @@ export class UserResolver implements Resolve<any> {
           .pipe(
             tap((userResponse: User) => {
               this.userService.user = userResponse;
+              this.userService.profilePictureUrl = user.picture ?? null;
             }),
           );
       }),
