@@ -15,31 +15,34 @@ enum Gender {
 }
 
 model Pokemon {
-  id               Int               @id @default(autoincrement())
-  name             String            @unique
-  displayName      String
-  displayNameDe    String
-  type1            String
-  type2            String?
-  pokemonInstances PokemonInstance[]
-  pokemonSpeciesId Int
-  pokemonSpecies   PokemonSpecies    @relation(fields: [pokemonSpeciesId], references: [id])
-  pokemonSprites   PokemonSprite[]
+  id                Int               @id @default(autoincrement())
+  name              String            @unique
+  displayName       String
+  displayNameDe     String
+  type1             String
+  type2             String?
+  pokemonInstances  PokemonInstance[]
+  pokemonSpeciesId  Int
+  pokemonSpecies    PokemonSpecies    @relation("SpeciesPokemons", fields: [pokemonSpeciesId], references: [id])
+  defaultForSpecies PokemonSpecies?   @relation("DefaultPokemon")
+  pokemonSprites    PokemonSprite?
 }
 
 model PokemonSpecies {
-  id          Int       @id @default(autoincrement())
-  genderRate  Int
-  isBaby      Boolean
-  isLegendary Boolean
-  isMythical  Boolean
-  captureRate Int
-  pokemon     Pokemon[]
+  id               Int       @id @default(autoincrement())
+  genderRate       Int
+  isBaby           Boolean
+  isLegendary      Boolean
+  isMythical       Boolean
+  captureRate      Int
+  pokemon          Pokemon[] @relation("SpeciesPokemons")
+  defaultPokemonId Int?      @unique
+  defaultPokemon   Pokemon?  @relation("DefaultPokemon", fields: [defaultPokemonId], references: [id])
 }
 
 model PokemonSprite {
   id               Int     @id @default(autoincrement())
-  pokemonId        Int
+  pokemonId        Int     @unique
   pokemon          Pokemon @relation(fields: [pokemonId], references: [id])
   backDefault      String
   backShiny        String
