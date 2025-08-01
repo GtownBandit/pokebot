@@ -31,7 +31,11 @@ export class AppController {
   @UseGuards(JwtAuthGuard)
   @Get('pokemon')
   async getPokemon(): Promise<Pokemon[]> {
-    return this.prisma.pokemon.findMany();
+    return this.prisma.pokemon.findMany({
+      include: {
+        pokemonSprites: true,
+      },
+    });
   }
 
   @UseGuards(JwtAuthGuard)
