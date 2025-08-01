@@ -6,13 +6,11 @@ import {
   Logger,
   OnModuleInit,
 } from '@nestjs/common';
-import { PrismaService } from '../../../prisma/prisma.service';
+import { PrismaService } from '../../prisma/prisma.service';
 import { TwitchService } from '../twitch.service';
 import { PokemonRandomizer } from './helpers/spawn-helpers/pokemon-randomizer.helper';
-import { PokemonMessageFormatter } from './helpers/spawn-helpers/pokemon-message-formatter.helper';
-
-// --- Types and Interfaces ---
-import { Pokemon, PokemonSpecies } from '@prisma/generated-client';
+import { PokemonMessageFormatter } from './helpers/spawn-helpers/pokemon-message-formatter.helper'; // --- Types and Interfaces ---
+import { Pokemon, PokemonSpecies } from '@prisma/generated-client'; // Gender type for clarity
 
 // Gender type for clarity
 export type PokemonGender = 'MALE' | 'FEMALE' | 'GENDERLESS';

@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from './prisma/prisma.service';
 import {
   CatchRollEvent,
   Pokemon,

@@ -6,7 +6,7 @@ import {
   Logger,
   OnModuleInit,
 } from '@nestjs/common';
-import { PrismaService } from '../../../prisma/prisma.service';
+import { PrismaService } from '../../prisma/prisma.service';
 import { TwitchService } from '../twitch.service';
 import { ChatMessage } from '@twurple/chat';
 import {
@@ -16,7 +16,7 @@ import {
   SpawnEvent,
 } from '@prisma/generated-client';
 import { PokemonCatchRandomizer } from './helpers/catch-helpers/pokemon-catch-randomizer.helper';
-import { PokemonCatchMessageFormatter } from './helpers/catch-helpers/pokemon-catch-message-formatter.helper';
+import { PokemonCatchMessageFormatter } from './helpers/catch-helpers/pokemon-catch-message-formatter.helper'; // --- Types and Interfaces ---
 
 // --- Types and Interfaces ---
 export interface SpawnEventWithInstanceAndSpecies extends SpawnEvent {
