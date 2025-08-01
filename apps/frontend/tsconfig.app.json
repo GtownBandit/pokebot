@@ -7,7 +7,7 @@
     "types": ["node"],
     "paths": {
       "@prisma/generated-client": [
-        "../../prisma/generated/client",
+        "../../apps/backend/prisma/generated/client",
       ],
     }
   },
