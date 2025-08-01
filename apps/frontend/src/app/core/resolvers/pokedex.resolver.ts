@@ -3,13 +3,25 @@ import { Resolve } from '@angular/router';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Pokemon } from '../../../prisma-types';
+import {
+  Pokemon,
+  PokemonSpecies,
+  PokemonSprite,
+} from '@prisma/generated-client';
+
+export type PokedexEntry = PokemonSpecies & {
+  defaultPokemon: Pokemon & { pokemonSprites: PokemonSprite };
+};
+
+export type PokedexEntryApiResponse = PokedexEntry[];
 
 @Injectable({ providedIn: 'root' })
-export class PokedexResolver implements Resolve<any> {
+export class PokedexResolver implements Resolve<PokedexEntryApiResponse> {
   constructor(private http: HttpClient) {}
 
-  resolve(): Observable<any> {
-    return this.http.get<Pokemon[]>(`${environment.backendURL}/pokemon`);
+  resolve(): Observable<PokedexEntryApiResponse> {
+    return this.http.get<PokedexEntryApiResponse>(
+      `${environment.backendURL}/pokemon-species`,
+    );
   }
 }

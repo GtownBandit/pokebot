@@ -1,5 +1,16 @@
-@for (pokemon of pokedexPokemon; track pokemon.id) {
-  <div>
-    {{ pokemon | json }}
-  </div>
-}
+<div class="flex flex-wrap gap-4">
+  @for (pokedexEntry of pokedexEntries; track pokedexEntry.id) {
+    <div class="bg-white rounded-lg shadow p-4 flex flex-col items-center w-40">
+      <img
+        [src]="getDefaultPokemonSprite(pokedexEntry.id)"
+        class="w-24 h-24 object-contain mb-2"
+      />
+      <div class="font-bold text-center">
+        {{ pokedexEntry.defaultPokemon.displayNameDe }}
+      </div>
+      <div class="text-xs text-gray-500 text-center">
+        #{{ pokedexEntry.id }}
+      </div>
+    </div>
+  }
+</div>

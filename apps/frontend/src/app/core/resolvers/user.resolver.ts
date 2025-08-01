@@ -5,7 +5,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, switchMap, take, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '@auth0/auth0-angular';
-import { User } from '../../../prisma-types';
+import { User } from '@prisma/generated-client';
 import { UserService } from '../../shared/services/user.service';
 
 @Injectable({ providedIn: 'root' })

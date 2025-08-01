@@ -15,6 +15,7 @@ import {
   CatchRollEvent,
   Pokemon,
   PokemonInstance,
+  PokemonSpecies,
   SpawnEvent,
   User,
 } from '@prisma/generated-client';
@@ -34,6 +35,20 @@ export class AppController {
     return this.prisma.pokemon.findMany({
       include: {
         pokemonSprites: true,
+      },
+    });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('pokemon-species')
+  async getPokemonSpecies(): Promise<PokemonSpecies[]> {
+    return this.prisma.pokemonSpecies.findMany({
+      include: {
+        defaultPokemon: {
+          include: {
+            pokemonSprites: true,
+          },
+        },
       },
     });
   }

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { JsonPipe } from '@angular/common';
-import { Pokemon } from '../../../prisma-types';
+import { Pokemon } from '@prisma/generated-client';
 import { UserService } from '../../shared/services/user.service';
 import { AuthService } from '@auth0/auth0-angular';
 

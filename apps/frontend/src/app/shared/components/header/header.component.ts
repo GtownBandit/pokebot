@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { UserService } from '../../services/user.service';
-import { User } from '../../../../prisma-types';
+import { User } from '@prisma/generated-client';
 import { environment } from '../../../../environments/environment';
 import { AuthService } from '@auth0/auth0-angular';
 

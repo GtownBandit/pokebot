@@ -1,20 +1,27 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Pokemon } from '../../../prisma-types';
-import { JsonPipe } from '@angular/common';
+import { PokedexEntry } from '../../core/resolvers/pokedex.resolver';
 
 @Component({
   selector: 'app-pokedex',
-  imports: [JsonPipe],
+  imports: [],
   templateUrl: './pokedex.component.html',
   styleUrl: './pokedex.component.scss',
 })
 export class PokedexComponent {
-  pokedexPokemon: Pokemon[];
+  pokedexEntries: PokedexEntry[];
 
   constructor(private route: ActivatedRoute) {
-    this.pokedexPokemon = this.route.snapshot.data['pokemon'].sort(
-      (a: Pokemon, b: Pokemon) => a.id - b.id,
+    this.pokedexEntries = this.route.snapshot.data['pokemon'].sort(
+      (a: PokedexEntry, b: PokedexEntry) => a.id - b.id,
     );
+  }
+
+  getDefaultPokemonSprite(id: PokedexEntry['id']) {
+    const pokemon = this.pokedexEntries.find((p) => p.id === id);
+    if (pokemon && pokemon.defaultPokemon) {
+      return pokemon.defaultPokemon.pokemonSprites.frontShiny;
+    }
+    return null;
   }
 }

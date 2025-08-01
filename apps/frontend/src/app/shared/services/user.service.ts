@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { User } from '../../../prisma-types';
+import { User } from '@prisma/generated-client';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
