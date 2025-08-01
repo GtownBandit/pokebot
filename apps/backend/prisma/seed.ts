@@ -1,5 +1,5 @@
 // apps/backend/prisma/seed.ts
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from './generated/client';
 import { GameClient, PokemonClient } from 'pokenode-ts';
 
 const prisma = new PrismaClient();
@@ -43,11 +43,57 @@ async function main() {
       captureRate: pokemonSpecies.capture_rate,
     };
 
+    if (
+      pokemon.sprites.front_default === null ||
+      pokemon.sprites.front_shiny === null ||
+      pokemon.sprites.back_default === null ||
+      pokemon.sprites.back_shiny === null
+    ) {
+      throw new Error('Missing sprite data for Pokémon: ' + pokemon.name);
+    }
+
+    const pokemonSpriteData = {
+      pokemonId: pokemon.id,
+      frontDefault: pokemon.sprites.front_default,
+      frontShiny: pokemon.sprites.front_shiny,
+      backDefault: pokemon.sprites.back_default,
+      backShiny: pokemon.sprites.back_shiny,
+      frontFemale: pokemon.sprites.front_female,
+      frontShinyFemale: pokemon.sprites.front_shiny_female,
+      backFemale: pokemon.sprites.back_female,
+      backShinyFemale: pokemon.sprites.back_shiny_female,
+    };
+
     await prisma.pokemonSpecies.create({ data: pokemonSpeciesData });
     await prisma.pokemon.create({ data: pokemonData });
+    await prisma.pokemonSprite.create({ data: pokemonSpriteData });
     console.log('Inserted Pokémon:', pokemonData.name);
   }
 }
+
+async function test() {
+  const pokemonClient = new PokemonClient();
+  const gameClient = new GameClient();
+  const generation = await gameClient.getGenerationById(1);
+  const pokemonSpeciesArray = generation.pokemon_species;
+  for (let i = 0; i < pokemonSpeciesArray.length; i++) {
+    let pokemon = await pokemonClient.getPokemonByName(
+      pokemonSpeciesArray[i].name,
+    );
+    if (
+      pokemon.sprites.front_default === null ||
+      pokemon.sprites.front_shiny === null ||
+      pokemon.sprites.back_default === null ||
+      pokemon.sprites.back_shiny === null
+    ) {
+      throw new Error('Missing sprite data for Pokémon: ' + pokemon.name);
+    } else {
+      console.log('Sprite data is complete for Pokémon:', pokemon.name);
+    }
+  }
+}
+
+// test().catch((e) => console.error(e));
 
 main()
   .catch((e) => console.error(e))

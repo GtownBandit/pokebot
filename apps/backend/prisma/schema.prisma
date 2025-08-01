@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-ts"
-  output = "../apps/backend/prisma/generated"
+  output   = "./generated"
 }
 
 datasource db {
@@ -24,6 +24,7 @@ model Pokemon {
   pokemonInstances PokemonInstance[]
   pokemonSpeciesId Int
   pokemonSpecies   PokemonSpecies    @relation(fields: [pokemonSpeciesId], references: [id])
+  pokemonSprites   PokemonSprite[]
 }
 
 model PokemonSpecies {
@@ -34,6 +35,20 @@ model PokemonSpecies {
   isMythical  Boolean
   captureRate Int
   pokemon     Pokemon[]
+}
+
+model PokemonSprite {
+  id               Int     @id @default(autoincrement())
+  pokemonId        Int
+  pokemon          Pokemon @relation(fields: [pokemonId], references: [id])
+  backDefault      String
+  backShiny        String
+  frontDefault     String
+  frontShiny       String
+  backFemale       String?
+  backShinyFemale  String?
+  frontFemale      String?
+  frontShinyFemale String?
 }
 
 model PokemonInstance {
