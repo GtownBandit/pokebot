@@ -1,3 +1,19 @@
-import type {CatchRollEvent, Gender, Pokemon, PokemonInstance, PokemonSpecies, SpawnEvent, User} from '@prisma/client';
+import type {
+  CatchRollEvent,
+  Gender,
+  Pokemon,
+  PokemonInstance,
+  PokemonSpecies,
+  SpawnEvent,
+  User,
+} from '../../../../prisma/generated/client';
 
-export type { CatchRollEvent, Gender, Pokemon, PokemonInstance, PokemonSpecies, SpawnEvent, User };
+export type {
+  CatchRollEvent,
+  Gender,
+  Pokemon,
+  PokemonInstance,
+  PokemonSpecies,
+  SpawnEvent,
+  User,
+};
