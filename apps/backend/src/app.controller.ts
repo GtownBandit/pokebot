@@ -16,40 +16,93 @@ import {
   Pokemon,
   PokemonInstance,
   PokemonSpecies,
+  PokemonSprite,
   SpawnEvent,
-  User,
 } from '@prisma/generated-client';
+
+export type PokedexEntry = PokemonSpecies & {
+  defaultPokemon: (Pokemon & { pokemonSprites: PokemonSprite | null }) | null;
+};
+
+export type PokedexResponse = (PokedexEntry & {
+  caughtPokemon: Pokemon[];
+  hasAtLeastOneShiny: boolean;
+})[];
 
 @Controller()
 export class AppController {
   constructor(private readonly prisma: PrismaService) {}
 
-  @UseGuards(JwtAuthGuard)
-  @Get('users')
-  async getUsers(): Promise<User[]> {
-    return this.prisma.user.findMany();
-  }
-  @UseGuards(JwtAuthGuard)
-  @Get('pokemon')
-  async getPokemon(): Promise<Pokemon[]> {
-    return this.prisma.pokemon.findMany({
-      include: {
-        pokemonSprites: true,
-      },
-    });
-  }
+  // @UseGuards(JwtAuthGuard)
+  // @Get('users')
+  // async getUsers(): Promise<User[]> {
+  //   return this.prisma.user.findMany();
+  // }
+  // @UseGuards(JwtAuthGuard)
+  // @Get('pokemon')
+  // async getPokemon(): Promise<Pokemon[]> {
+  //   return this.prisma.pokemon.findMany({
+  //     include: {
+  //       pokemonSprites: true,
+  //     },
+  //   });
+  // }
+
+  // @UseGuards(JwtAuthGuard)
+  // @Get('pokemon-species')
+  // async getPokemonSpecies(): Promise<PokemonSpecies[]> {
+  //   return this.prisma.pokemonSpecies.findMany();
+  // }
 
   @UseGuards(JwtAuthGuard)
-  @Get('pokemon-species')
-  async getPokemonSpecies(): Promise<PokemonSpecies[]> {
-    return this.prisma.pokemonSpecies.findMany({
-      include: {
-        defaultPokemon: {
-          include: {
-            pokemonSprites: true,
+  @Get('pokedex')
+  async getPokedexData(@Req() req): Promise<PokedexResponse> {
+    const twitchId = req.user.userId;
+
+    // Get all pokemon instances for the user
+    const userInstances: (PokemonInstance & { pokemon: Pokemon })[] =
+      await this.prisma.pokemonInstance.findMany({
+        where: { user: { twitchId } },
+        include: { pokemon: true },
+      });
+
+    // Group user's caught pokemon by speciesId
+    const caughtMap = new Map<number, Pokemon[]>();
+    userInstances.forEach((instance) => {
+      const speciesId = instance.pokemon.pokemonSpeciesId;
+      if (!caughtMap.has(speciesId)) {
+        caughtMap.set(speciesId, []);
+      }
+      caughtMap.get(speciesId)!.push(instance.pokemon);
+    });
+
+    // Get all pokedex entries
+    const pokedexEntries: PokedexEntry[] =
+      await this.prisma.pokemonSpecies.findMany({
+        include: {
+          defaultPokemon: {
+            include: {
+              pokemonSprites: true,
+            },
           },
         },
-      },
+      });
+
+    // Add caughtPokemon array and shiny flag to each entry
+    return pokedexEntries.map((entry) => {
+      // Get all instances for this species
+      const instances = userInstances.filter(
+        (instance) => instance.pokemon.pokemonSpeciesId === entry.id,
+      );
+      const caughtPokemon = instances.map((instance) => instance.pokemon);
+      const hasAtLeastOneShiny = instances.some(
+        (instance) => instance.shiny === true,
+      );
+      return {
+        ...entry,
+        caughtPokemon,
+        hasAtLeastOneShiny,
+      };
     });
   }
 

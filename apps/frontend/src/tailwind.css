@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import "tailwindcss"; ng-container
 
 @font-face {
   font-family: "Pokemon";
@@ -17,13 +17,30 @@
 @theme {
   --font-pokemon: Pokemon, sans-serif;
   --font-retro: PressStart2P, sans-serif;
+  --color-type-normal: #A8A77A;
+  --color-type-fire: #EE8130;
+  --color-type-water: #6390F0;
+  --color-type-electric: #F7D02C;
+  --color-type-grass: #7AC74C;
+  --color-type-ice: #96D9D6;
+  --color-type-fighting: #C22E28;
+  --color-type-poison: #A33EA1;
+  --color-type-ground: #E2BF65;
+  --color-type-flying: #A98FF3;
+  --color-type-psychic: #F95587;
+  --color-type-bug: #A6B91A;
+  --color-type-rock: #B6A136;
+  --color-type-ghost: #735797;
+  --color-type-dragon: #6F35FC;
+  --color-type-dark: #705746;
+  --color-type-steel: #B7B7CE;
+  --color-type-fairy: #D685AD;
 }
 
 @layer utilities {
   .pokemon-title {
-    font-family: var(--font-pokemon);
+    font-family: var(--font-pokemon, Pokemon, sans-serif);
     -webkit-text-stroke: 1px #000;
-    /* fallback for browsers without text-stroke */
     text-shadow: 0 0 2px #000, 0 0 1px #000;
   }
 }

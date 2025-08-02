@@ -11,6 +11,8 @@ import {
 
 export type PokedexEntry = PokemonSpecies & {
   defaultPokemon: Pokemon & { pokemonSprites: PokemonSprite };
+  caughtPokemon: Pokemon[];
+  hasAtLeastOneShiny: boolean;
 };
 
 export type PokedexEntryApiResponse = PokedexEntry[];
@@ -21,7 +23,7 @@ export class PokedexResolver implements Resolve<PokedexEntryApiResponse> {
 
   resolve(): Observable<PokedexEntryApiResponse> {
     return this.http.get<PokedexEntryApiResponse>(
-      `${environment.backendURL}/pokemon-species`,
+      `${environment.backendURL}/pokedex`,
     );
   }
 }

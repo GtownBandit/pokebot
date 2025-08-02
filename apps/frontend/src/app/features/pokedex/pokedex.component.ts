@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PokedexEntry } from '../../core/resolvers/pokedex.resolver';
+import { NgClass } from '@angular/common';
+import { PokemonTypeLabelComponent } from '../../shared/components/pokemon-type-label/pokemon-type-label.component';
 
 @Component({
   selector: 'app-pokedex',
-  imports: [],
+  imports: [NgClass, PokemonTypeLabelComponent],
   templateUrl: './pokedex.component.html',
   styleUrl: './pokedex.component.scss',
 })
@@ -18,9 +20,13 @@ export class PokedexComponent {
   }
 
   getDefaultPokemonSprite(id: PokedexEntry['id']) {
-    const pokemon = this.pokedexEntries.find((p) => p.id === id);
-    if (pokemon && pokemon.defaultPokemon) {
-      return pokemon.defaultPokemon.pokemonSprites.frontShiny;
+    const pokedexEntry = this.pokedexEntries.find((p) => p.id === id);
+    if (pokedexEntry && pokedexEntry.defaultPokemon) {
+      if (pokedexEntry.hasAtLeastOneShiny) {
+        return pokedexEntry.defaultPokemon.pokemonSprites.frontShiny;
+      } else {
+        return pokedexEntry.defaultPokemon.pokemonSprites.frontDefault;
+      }
     }
     return null;
   }
