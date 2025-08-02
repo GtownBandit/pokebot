@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PokedexEntry } from '../../core/resolvers/pokedex.resolver';
-import { NgClass } from '@angular/common';
 import { PokemonTypeLabelComponent } from '../../shared/components/pokemon-type-label/pokemon-type-label.component';
+import { PokemonSpeciesCardComponent } from './pokemon-species-card/pokemon-species-card.component';
 
 @Component({
   selector: 'app-pokedex',
-  imports: [NgClass, PokemonTypeLabelComponent],
+  imports: [PokemonTypeLabelComponent, PokemonSpeciesCardComponent],
   templateUrl: './pokedex.component.html',
   styleUrl: './pokedex.component.scss',
 })

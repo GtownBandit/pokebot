@@ -1,0 +1,35 @@
+<div
+  class="rounded-lg p-4 flex flex-col items-center w-40 cursor-default shadow-lg border"
+  [ngClass]="{
+    'bg-neutral-50': isCaught,
+    'bg-neutral-200': !isCaught
+  }"
+>
+  <div>
+    @if (isCaught) {
+      <img [src]="defaultPokemonSprite" class="w-24 h-24 object-contain mb-2" />
+    } @else {
+      <div
+        class="w-24 h-24 flex justify-center items-center mb-2 font-retro text-6xl select-none"
+      >
+        ?
+      </div>
+    }
+    <div class="font-bold text-center">
+      {{ pokemonName }}
+    </div>
+    <div class="text-xs text-gray-500 text-center">{{ pokedexNumber }}</div>
+    <div class="flex gap-2 mt-2 justify-center">
+      <app-pokemon-type-label
+        [pokemonType]="defaultType1"
+        [hideType]="!isCaught"
+      ></app-pokemon-type-label>
+      @if (defaultType2) {
+        <app-pokemon-type-label
+          [pokemonType]="defaultType2"
+          [hideType]="!isCaught"
+        ></app-pokemon-type-label>
+      }
+    </div>
+  </div>
+</div>
