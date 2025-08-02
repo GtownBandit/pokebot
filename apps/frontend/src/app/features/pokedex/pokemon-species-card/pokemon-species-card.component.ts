@@ -20,9 +20,13 @@ export class PokemonSpeciesCardComponent {
     return '#' + this.pokedexEntry.id.toString().padStart(3, '0');
   }
   get pokemonName(): string {
-    return this.isCaught
+    let name = this.isCaught
       ? this.pokedexEntry.defaultPokemon.displayNameDe
       : '?'.repeat(this.pokedexEntry.defaultPokemon.displayNameDe.length);
+    if (this.pokedexEntry.hasAtLeastOneShiny) {
+      name = '✨' + name + '✨';
+    }
+    return name;
   }
   get defaultType1(): string {
     return this.pokedexEntry.defaultPokemon.type1;
