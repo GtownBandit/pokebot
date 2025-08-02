@@ -11,22 +11,26 @@ import { PokemonSpeciesCardComponent } from './pokemon-species-card/pokemon-spec
 })
 export class PokedexComponent {
   pokedexEntries: PokedexEntry[];
+  totalSpeciesCaught: number = 0;
+  totalPokemon: number = 0;
+  totalPokemonCaught: number = 0;
+  percentageCaught: number = 0;
 
   constructor(private route: ActivatedRoute) {
     this.pokedexEntries = this.route.snapshot.data['pokemon'].sort(
       (a: PokedexEntry, b: PokedexEntry) => a.id - b.id,
     );
-  }
-
-  getDefaultPokemonSprite(id: PokedexEntry['id']) {
-    const pokedexEntry = this.pokedexEntries.find((p) => p.id === id);
-    if (pokedexEntry && pokedexEntry.defaultPokemon) {
-      if (pokedexEntry.hasAtLeastOneShiny) {
-        return pokedexEntry.defaultPokemon.pokemonSprites.frontShiny;
-      } else {
-        return pokedexEntry.defaultPokemon.pokemonSprites.frontDefault;
-      }
-    }
-    return null;
+    this.totalPokemon = this.pokedexEntries.length;
+    this.totalSpeciesCaught = this.pokedexEntries.filter(
+      (e) => e.caughtPokemon.length > 0,
+    ).length;
+    this.totalPokemonCaught = this.pokedexEntries.reduce(
+      (acc, entry) => acc + entry.caughtPokemon.length,
+      0,
+    );
+    this.percentageCaught =
+      this.totalPokemon > 0
+        ? Math.floor((this.totalSpeciesCaught / this.totalPokemon) * 1000) / 10
+        : 0;
   }
 }

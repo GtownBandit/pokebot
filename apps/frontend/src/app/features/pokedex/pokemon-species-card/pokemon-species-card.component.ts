@@ -16,14 +16,19 @@ export class PokemonSpeciesCardComponent {
     return this.pokedexEntry.caughtPokemon.length > 0;
   }
 
+  get hasShiny(): boolean {
+    return this.pokedexEntry.hasAtLeastOneShiny;
+  }
+
   get pokedexNumber(): string {
     return '#' + this.pokedexEntry.id.toString().padStart(3, '0');
   }
+
   get pokemonName(): string {
     let name = this.isCaught
       ? this.pokedexEntry.defaultPokemon.displayNameDe
       : '?'.repeat(this.pokedexEntry.defaultPokemon.displayNameDe.length);
-    if (this.pokedexEntry.hasAtLeastOneShiny) {
+    if (this.hasShiny) {
       name = '✨' + name + '✨';
     }
     return name;

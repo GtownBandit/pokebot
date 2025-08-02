@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+.rainbow-bg {
+  @apply relative border-2 border-yellow-300 p-4;
+  background: linear-gradient(111deg,
+    #f38181,
+    #f07ddf,
+    #b89aff,
+    #48b9f8,
+    #00c8c0,
+    #6ac875,
+    #b4be3f,
+    #e1b172);
+  background-size: 200% 200%;
+  animation: rainbowMove 8s ease-in-out infinite;
+}
+
+.caught-bg {
+  @apply relative border-2 border-neutral-200 p-4;
+  background: white;
+  background-size: 200% 200%;
+  //animation: rainbowMove 10s ease-in-out infinite;
+}
+
+.uncaught-bg {
+  @apply relative border-2 border-neutral-400 p-4;
+  background: linear-gradient(111deg,
+    rgba(240, 240, 240, 1),
+    rgba(210, 210, 210, 1)
+  );
+  background-size: 200% 200%;
+  animation: rainbowMove 10s ease-in-out infinite;
+}
+
+@keyframes rainbowMove {
+  0%, 100% {
+    background-position: 0 0;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+}
+
