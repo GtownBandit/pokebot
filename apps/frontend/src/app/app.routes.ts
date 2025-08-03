@@ -7,6 +7,7 @@ import { LoggedInLayoutComponent } from './shared/components/logged-in-layout/lo
 import { PokedexResolver } from './core/resolvers/pokedex.resolver';
 import { PokemonManagerComponent } from './features/pokemon-manager/pokemon-manager.component';
 import { ActiveTeamManagerComponent } from './features/active-team-manager/active-team-manager.component';
+import { PokemonManagerResolver } from './core/resolvers/pokemon-manager.resolver';
 
 export const routes: Routes = [
   {
@@ -31,6 +32,7 @@ export const routes: Routes = [
           {
             path: 'pokemon',
             component: PokemonManagerComponent,
+            resolve: { pokemonInstances: PokemonManagerResolver },
           },
           {
             path: 'active-team',

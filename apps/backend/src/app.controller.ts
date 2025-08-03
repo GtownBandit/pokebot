@@ -33,27 +33,6 @@ export type PokedexResponse = (PokedexEntry & {
 export class AppController {
   constructor(private readonly prisma: PrismaService) {}
 
-  // @UseGuards(JwtAuthGuard)
-  // @Get('users')
-  // async getUsers(): Promise<User[]> {
-  //   return this.prisma.user.findMany();
-  // }
-  // @UseGuards(JwtAuthGuard)
-  // @Get('pokemon')
-  // async getPokemon(): Promise<Pokemon[]> {
-  //   return this.prisma.pokemon.findMany({
-  //     include: {
-  //       pokemonSprites: true,
-  //     },
-  //   });
-  // }
-
-  // @UseGuards(JwtAuthGuard)
-  // @Get('pokemon-species')
-  // async getPokemonSpecies(): Promise<PokemonSpecies[]> {
-  //   return this.prisma.pokemonSpecies.findMany();
-  // }
-
   @UseGuards(JwtAuthGuard)
   @Get('pokedex')
   async getPokedexData(@Req() req): Promise<PokedexResponse> {
@@ -95,9 +74,7 @@ export class AppController {
         (instance) => instance.pokemon.pokemonSpeciesId === entry.id,
       );
       const caughtPokemon = instances.map((instance) => instance.pokemon);
-      const hasAtLeastOneShiny = instances.some(
-        (instance) => instance.shiny === true,
-      );
+      const hasAtLeastOneShiny = instances.some((instance) => instance.shiny);
       return {
         ...entry,
         caughtPokemon,
@@ -113,7 +90,17 @@ export class AppController {
     console.log(req.user);
     const userWithInstances = await this.prisma.user.findUnique({
       where: { twitchId: twitchId },
-      include: { pokemonInstances: true },
+      include: {
+        pokemonInstances: {
+          include: {
+            pokemon: {
+              include: {
+                pokemonSprites: true,
+              },
+            },
+          },
+        },
+      },
     });
     if (!userWithInstances) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);

@@ -1,4 +1,6 @@
-<app-header class="sticky top-0 z-50 w-full"></app-header>
-<div class="pt-5 bg-base-300">
-  <router-outlet></router-outlet>
+<div class="flex flex-col min-h-screen bg-base-300 items-center">
+  <app-header class="sticky top-0 z-50 w-full"></app-header>
+  <div class="flex-grow w-full lg:w-2/3 pt-5">
+    <router-outlet></router-outlet>
+  </div>
 </div>

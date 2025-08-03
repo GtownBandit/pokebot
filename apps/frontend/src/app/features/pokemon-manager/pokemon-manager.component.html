@@ -1,1 +1,12 @@
-<p>pokemon-manager works!</p>
+<div>
+  @for (
+    pokemonInstance of pokemonInstancesWithSprites;
+    track pokemonInstance.id
+  ) {
+    <img
+      [ngSrc]="pokemonInstance.pokemon.pokemonSprites.spriteDefault"
+      height="56"
+      width="68"
+    />
+  }
+</div>
