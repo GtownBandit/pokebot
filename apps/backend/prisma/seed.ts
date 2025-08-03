@@ -82,6 +82,10 @@ async function main() {
       frontShinyFemale: pokemon.sprites.other['showdown'].front_shiny_female,
       backFemale: pokemon.sprites.other['showdown'].back_female,
       backShinyFemale: pokemon.sprites.other['showdown'].back_shiny_female,
+      spriteDefault:
+        pokemon.sprites.versions['generation-viii'].icons.front_default,
+      spriteFemale:
+        pokemon.sprites.versions['generation-viii'].icons.front_female,
     };
     await prisma.pokemonSprite.create({ data: pokemonSpriteData });
 
