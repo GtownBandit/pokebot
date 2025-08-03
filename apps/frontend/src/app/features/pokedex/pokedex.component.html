@@ -1,35 +1,29 @@
 <div class="flex flex-col items-center p-4">
-  <div class="w-2/3 mb-5">
-    <div class="w-full flex justify-between gap-4">
-      <div
-        class="border bg-white border-gray-300 w-full h-full text-center py-4 rounded-xl"
-      >
-        <div class="text-sm text-gray-500 font-extrabold mb-2">
-          Pokedex Status
-        </div>
-        <div class="text-2xl font-extrabold">
+  <div class="w-full lg:w-2/3 mb-5">
+    <div
+      class="w-full stats stats-vertical bg-base-100 lg:stats-horizontal shadow"
+    >
+      <div class="stat">
+        <div class="stat-title">Pokedex Status</div>
+        <div class="stat-value">
           {{ totalSpeciesCaught + " / " + totalPokemon }}
         </div>
       </div>
-      <div
-        class="border bg-white border-gray-300 w-full h-full text-center py-4 rounded-xl"
-      >
-        <div class="text-sm text-gray-500 font-extrabold mb-2">Pokedex</div>
-        <div class="text-2xl font-extrabold">
+
+      <div class="stat">
+        <div class="stat-title">Pokedex</div>
+        <div class="stat-value">
           {{ percentageCaught + "%" }}
         </div>
       </div>
-      <div
-        class="border bg-white border-gray-300 w-full h-full text-center py-4 rounded-xl"
-      >
-        <div class="text-sm text-gray-500 font-extrabold mb-2">
-          Total Pokemon Caught
-        </div>
-        <div class="text-2xl font-extrabold">{{ totalPokemonCaught }}</div>
+
+      <div class="stat">
+        <div class="stat-title">Total Pokemon Caught</div>
+        <div class="stat-value">{{ totalPokemonCaught }}</div>
       </div>
     </div>
   </div>
-  <div class="flex flex-wrap gap-4 justify-between w-2/3">
+  <div class="flex flex-wrap gap-4 justify-between w-full lg:w-2/3">
     @for (pokedexEntry of pokedexEntries; track pokedexEntry.id) {
       <app-pokemon-species-card [pokedexEntry]="pokedexEntry" />
     }

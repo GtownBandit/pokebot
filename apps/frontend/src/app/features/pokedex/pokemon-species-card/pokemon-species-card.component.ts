@@ -16,6 +16,10 @@ export class PokemonSpeciesCardComponent {
     return this.pokedexEntry.caughtPokemon.length > 0;
   }
 
+  get amountCaught(): number {
+    return this.pokedexEntry.caughtPokemon.length;
+  }
+
   get hasShiny(): boolean {
     return this.pokedexEntry.hasAtLeastOneShiny;
   }

@@ -3,10 +3,11 @@ import { UserService } from '../../services/user.service';
 import { User } from '@prisma/generated-client';
 import { environment } from '../../../../environments/environment';
 import { AuthService } from '@auth0/auth0-angular';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-header',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
