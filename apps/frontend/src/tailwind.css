@@ -8,6 +8,13 @@
 }
 
 @font-face {
+  font-family: "Quicksand";
+  src: url("./assets/fonts/quicksand.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
   font-family: "PressStart2P";
   src: url("./assets/fonts/PressStart2P-Regular.ttf") format("truetype");
   font-weight: normal;
@@ -39,8 +46,12 @@
 
 @layer utilities {
   .pokemon-title {
-    font-family: var(--font-pokemon, Pokemon, sans-serif);
+    font-family: var(--font-pokemon, Pokemon, sans-serif), system-ui;
     -webkit-text-stroke: 1px #000;
     text-shadow: 0 0 2px #000, 0 0 1px #000;
   }
+}
+
+body {
+  font-family: "Quicksand", sans-serif;
 }
