@@ -67,7 +67,7 @@ model PokemonInstance {
   nickname    String?
   shiny       Boolean     @default(false)
   gender      Gender
-  spawnEvents SpawnEvent?
+  spawnEvent SpawnEvent?
 }
 
 model SpawnEvent {

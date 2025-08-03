@@ -87,12 +87,12 @@ export class AppController {
   @Get('pokemon-instances')
   async getPokemonInstances(@Req() req): Promise<PokemonInstance[]> {
     const twitchId = req.user.userId;
-    console.log(req.user);
     const userWithInstances = await this.prisma.user.findUnique({
       where: { twitchId: twitchId },
       include: {
         pokemonInstances: {
           include: {
+            spawnEvent: true,
             pokemon: {
               include: {
                 pokemonSprites: true,

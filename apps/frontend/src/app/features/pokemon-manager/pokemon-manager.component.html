@@ -1,12 +1,74 @@
-<div>
-  @for (
-    pokemonInstance of pokemonInstancesWithSprites;
-    track pokemonInstance.id
-  ) {
-    <img
-      [ngSrc]="pokemonInstance.pokemon.pokemonSprites.spriteDefault"
-      height="56"
-      width="68"
-    />
-  }
+<div
+  class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100"
+>
+  <table class="table">
+    <!-- head -->
+    <thead>
+      <tr>
+        <th></th>
+        <th>Name</th>
+        <th>Level</th>
+        <th>Gender</th>
+        <th>Types</th>
+        <th>Caught</th>
+        <th>Channel</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (
+        pokemonInstance of pokemonInstancesWithSprites;
+        track pokemonInstance.id
+      ) {
+        <tr class="hover:bg-base-200 cursor-pointer select-none">
+          <td>
+            <div class="flex items-center">
+              <img
+                [ngSrc]="pokemonInstance.pokemon.pokemonSprites.spriteDefault"
+                height="56"
+                width="68"
+                priority
+              />
+            </div>
+          </td>
+          <td class="text-xl">
+            {{ pokemonInstance.shiny ? "✨" : "" }}
+            {{
+              pokemonInstance.nickname
+                ? pokemonInstance.nickname
+                : pokemonInstance.pokemon.displayNameDe
+            }}
+            {{ pokemonInstance.shiny ? "✨" : "" }}
+          </td>
+          <td class="text-xl">{{ pokemonInstance.level }}</td>
+          <td class="text-xl">{{ getGenderEmoji(pokemonInstance.gender) }}</td>
+          <td class="text-xl">
+            <div class="flex">
+              <div
+                class="ml-2"
+                [ngClass]="getTypeTextColor(pokemonInstance.pokemon.type1)"
+              >
+                <fa-icon [icon]="getTypeIcon(pokemonInstance.pokemon.type1)" />
+              </div>
+              @if (pokemonInstance.pokemon.type2) {
+                <div
+                  class="ml-2"
+                  [ngClass]="getTypeTextColor(pokemonInstance.pokemon.type2)"
+                >
+                  <fa-icon
+                    [icon]="getTypeIcon(pokemonInstance.pokemon.type2)"
+                  />
+                </div>
+              }
+            </div>
+          </td>
+          <td class="text-xl">
+            {{ pokemonInstance.spawnEvent.expiresAt | date: "dd/MM HH:mm" }}
+          </td>
+          <td class="text-xl">
+            {{ pokemonInstance.spawnEvent.channel }}
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
 </div>
