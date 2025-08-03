@@ -52,6 +52,9 @@ model PokemonSprite {
   backShinyFemale  String?
   frontFemale      String?
   frontShinyFemale String?
+  spriteDefault     String
+  spriteFemale      String?
+  
 }
 
 model PokemonInstance {

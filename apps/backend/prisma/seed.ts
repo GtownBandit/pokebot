@@ -67,7 +67,8 @@ async function main() {
       pokemon.sprites.other['showdown'].front_default === null ||
       pokemon.sprites.other['showdown'].front_shiny === null ||
       pokemon.sprites.other['showdown'].back_default === null ||
-      pokemon.sprites.other['showdown'].back_shiny === null
+      pokemon.sprites.other['showdown'].back_shiny === null ||
+      pokemon.sprites.versions['generation-viii'].icons.front_default === null
     ) {
       throw new Error('Missing sprite data for Pokémon: ' + pokemon.name);
     }
@@ -95,129 +96,33 @@ async function main() {
 }
 
 async function test() {
-  const axios = require('axios');
-  const sizeOf = require('image-size').default || require('image-size');
-  const pLimit = require('p-limit').default || require("'p-limit");
   const pokemonClient = new PokemonClient();
   const gameClient = new GameClient();
+  const generation = await gameClient.getGenerationById(1);
+  const pokemonSpeciesArray = generation.pokemon_species;
+  for (let i = 0; i < pokemonSpeciesArray.length; i++) {
+    let pokemon = await pokemonClient.getPokemonByName(
+      pokemonSpeciesArray[i].name,
+    );
 
-  const pokemonList = await pokemonClient.listPokemons(0, 1302);
-  const pokemonArray = pokemonList.results;
-
-  let largestHeight = {
-    height: 0,
-    pokemon: '',
-    spriteType: '',
-    url: '',
-  };
-  let largestWidth = {
-    width: 0,
-    pokemon: '',
-    spriteType: '',
-    url: '',
-  };
-  let missingSprites: string[] = [];
-
-  // Limit concurrency for API/image requests
-  const limit = pLimit(10); // 10 concurrent requests
-
-  // Fetch all Pokémon details in parallel
-  const pokemonDetails = await Promise.all(
-    pokemonArray.map((p) =>
-      limit(() => pokemonClient.getPokemonByName(p.name)),
-    ),
-  );
-
-  // Process each Pokémon in parallel
-  await Promise.all(
-    pokemonDetails.map(async (pokemon, i) => {
-      const sprites = pokemon.sprites.other?.['showdown'];
-      if (pokemon.name.includes('mega') || pokemon.name.includes('gmax')) {
-        console.log('Skipping mega or gmax Pokémon:', pokemon.name);
-        return;
-      }
-      if (
-        !sprites ||
-        sprites.front_default === null ||
-        sprites.front_shiny === null ||
-        sprites.back_default === null ||
-        sprites.back_shiny === null
-      ) {
-        console.log(
-          'Skipping Pokémon due to missing sprites:',
-          i + 1,
-          pokemon.name,
-        );
-        missingSprites.push(pokemon.name);
-        return;
-      }
-      const spriteTypes = ['front_default', 'back_default'];
-      console.log(
-        `Checking Pokémon: ${pokemon.name} (${i + 1}/${pokemonArray.length})`,
-      );
-      await Promise.all(
-        spriteTypes.map(async (type) => {
-          const url = sprites[type];
-          if (url) {
-            try {
-              const response = await limit(() =>
-                axios.get(url, { responseType: 'arraybuffer' }),
-              );
-              const dimensions = sizeOf(response.data);
-              // Use a lock to update largestHeight/largestWidth safely
-              if (dimensions.height > largestHeight.height) {
-                largestHeight = {
-                  height: dimensions.height,
-                  pokemon: pokemon.name,
-                  spriteType: type,
-                  url,
-                };
-              }
-              if (dimensions.width > largestWidth.width) {
-                largestWidth = {
-                  width: dimensions.width,
-                  pokemon: pokemon.name,
-                  spriteType: type,
-                  url,
-                };
-              }
-            } catch (err) {
-              console.error(
-                'Error fetching sprite for',
-                pokemon.name,
-                type,
-                url,
-                err,
-              );
-            }
-          }
-        }),
-      );
-    }),
-  );
-
-  console.log('Missing sprites:', missingSprites.length);
-  console.log(missingSprites);
-  console.log(
-    'Largest height:',
-    largestHeight.height,
-    'by',
-    largestHeight.pokemon,
-    largestHeight.spriteType,
-    largestHeight.url,
-  );
-  console.log(
-    'Largest width:',
-    largestWidth.width,
-    'by',
-    largestWidth.pokemon,
-    largestWidth.spriteType,
-    largestWidth.url,
-  );
+    if (!pokemon.sprites.versions['generation-viii'].icons.front_default) {
+      throw new Error('Missing sprite for Pokémon: ' + pokemon.name);
+    }
+    await prisma.pokemonSprite.update({
+      where: { pokemonId: pokemon.id },
+      data: {
+        spriteDefault:
+          pokemon.sprites.versions['generation-viii'].icons.front_default,
+        spriteFemale:
+          pokemon.sprites.versions['generation-viii'].icons.front_female,
+      },
+    });
+    console.log('Updated sprite for Pokémon:', pokemon.name);
+  }
 }
 
-// test().catch((e) => console.error(e));
+test().catch((e) => console.error(e));
 
-main()
-  .catch((e) => console.error(e))
-  .finally(() => prisma.$disconnect());
+// main()
+//   .catch((e) => console.error(e))
+//   .finally(() => prisma.$disconnect());
