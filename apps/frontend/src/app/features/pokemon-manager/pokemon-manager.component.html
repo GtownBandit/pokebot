@@ -1,74 +1,96 @@
-<div
-  class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100"
->
-  <table class="table">
-    <!-- head -->
-    <thead>
-      <tr>
-        <th></th>
-        <th>Name</th>
-        <th>Level</th>
-        <th>Gender</th>
-        <th>Types</th>
-        <th>Caught</th>
-        <th>Channel</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (
-        pokemonInstance of pokemonInstancesWithSprites;
-        track pokemonInstance.id
-      ) {
-        <tr class="hover:bg-base-200 cursor-pointer select-none">
-          <td>
-            <div class="flex items-center">
-              <img
-                [ngSrc]="pokemonInstance.pokemon.pokemonSprites.spriteDefault"
-                height="56"
-                width="68"
-                priority
-              />
-            </div>
-          </td>
-          <td class="text-xl">
-            {{ pokemonInstance.shiny ? "✨" : "" }}
-            {{
-              pokemonInstance.nickname
-                ? pokemonInstance.nickname
-                : pokemonInstance.pokemon.displayNameDe
-            }}
-            {{ pokemonInstance.shiny ? "✨" : "" }}
-          </td>
-          <td class="text-xl">{{ pokemonInstance.level }}</td>
-          <td class="text-xl">{{ getGenderEmoji(pokemonInstance.gender) }}</td>
-          <td class="text-xl">
-            <div class="flex">
-              <div
-                class="ml-2"
-                [ngClass]="getTypeTextColor(pokemonInstance.pokemon.type1)"
-              >
-                <fa-icon [icon]="getTypeIcon(pokemonInstance.pokemon.type1)" />
+<div class="mx-5 lg:mx-0">
+  <div class="flex flex-wrap gap-4 justify-evenly">
+    @for (
+      pokemonInstance of pokemonInstancesWithSprites;
+      track pokemonInstance.id
+    ) {
+      <div
+        class="card bg-base-100 hover:bg-base-200 shadow-md hover:shadow-lg cursor-pointer select-none transition-transform duration-200 hover:-translate-y-1 border border-base-200 w-full md:w-80"
+        [ngClass]="{
+          'rainbow-bg': pokemonInstance.shiny,
+          'border border-base-200': !pokemonInstance.shiny
+        }"
+      >
+        <div class="card-body p-4 flex flex-col gap-2">
+          <!-- Top row: image + name -->
+          <div class="flex items-center gap-3 mb-0 md:mb-2">
+            <img
+              [ngSrc]="pokemonInstance.pokemon.pokemonSprites.spriteDefault"
+              height="56"
+              width="68"
+              priority
+              class="w-16 h-16 rounded-lg"
+              [ngClass]="{
+                'bg-base-200/50': pokemonInstance.shiny,
+                'border border-base-300 bg-base-200': !pokemonInstance.shiny
+              }"
+            />
+            <div>
+              <h2 class="card-title text-lg flex items-center gap-1">
+                @if (pokemonInstance.shiny) {
+                  <span>✨</span>
+                }
+                <span>
+                  {{
+                    pokemonInstance.nickname
+                      ? pokemonInstance.nickname
+                      : pokemonInstance.pokemon.displayNameDe
+                  }}
+                </span>
+                @if (pokemonInstance.shiny) {
+                  <span>✨</span>
+                }
+              </h2>
+              <div class="flex flex-wrap gap-2 mt-1">
+                <span class="badge badge-ghost flex items-center gap-1">
+                  <fa-icon icon="star" class="text-yellow-400" />
+                  Lv. {{ pokemonInstance.level }}
+                </span>
+                <span class="badge badge-ghost flex items-center gap-1">
+                  {{ getGenderEmoji(pokemonInstance.gender) }}
+                </span>
               </div>
+            </div>
+          </div>
+          <div class="hidden md:block">
+            <!-- Types -->
+            <div class="flex items-center gap-2 mt-1">
+              <app-pokemon-type-label
+                [pokemonType]="pokemonInstance.pokemon.type1"
+              ></app-pokemon-type-label>
               @if (pokemonInstance.pokemon.type2) {
-                <div
-                  class="ml-2"
-                  [ngClass]="getTypeTextColor(pokemonInstance.pokemon.type2)"
-                >
-                  <fa-icon
-                    [icon]="getTypeIcon(pokemonInstance.pokemon.type2)"
-                  />
-                </div>
+                <app-pokemon-type-label
+                  [pokemonType]="pokemonInstance.pokemon.type2"
+                ></app-pokemon-type-label>
               }
             </div>
-          </td>
-          <td class="text-xl">
-            {{ pokemonInstance.spawnEvent.expiresAt | date: "dd/MM HH:mm" }}
-          </td>
-          <td class="text-xl">
-            {{ pokemonInstance.spawnEvent.channel }}
-          </td>
-        </tr>
-      }
-    </tbody>
-  </table>
+            <div class="divider my-2"></div>
+
+            <!-- Caught & Channel -->
+            <div class="flex flex-col gap-1 text-xs text-base-content/70">
+              <div class="flex flex-wrap items-center justify-evenly gap-2">
+                <div>
+                  <span class="badge badge-ghost flex items-center gap-1">
+                    <fa-icon
+                      icon="calendar-alt"
+                      class="text-base-content/60 mr-1"
+                    />
+                    <span>
+                      {{ pokemonInstance.spawnEvent.expiresAt | date: "dd/MM" }}
+                    </span>
+                  </span>
+                </div>
+                <div>
+                  <span class="badge badge-ghost flex items-center gap-1">
+                    <fa-icon icon="hashtag" class="text-base-content/60 mr-1" />
+                    <span>{{ pokemonInstance.spawnEvent.channel }}</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
 </div>
