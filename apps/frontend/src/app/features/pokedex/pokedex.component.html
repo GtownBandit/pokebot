@@ -23,7 +23,7 @@
       </div>
     </div>
   </div>
-  <div class="flex flex-wrap gap-4 justify-between w-full">
+  <div class="grid gap-4 grid-cols-[repeat(auto-fit,minmax(10rem,1fr))] w-full">
     @for (pokedexEntry of pokedexEntries; track pokedexEntry.id) {
       <app-pokemon-species-card [pokedexEntry]="pokedexEntry" />
     }
