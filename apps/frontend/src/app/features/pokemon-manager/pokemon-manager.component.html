@@ -13,9 +13,10 @@
       >
         <div class="card-body p-4 flex flex-col gap-2">
           <!-- Top row: image + name -->
-          <div class="flex items-center gap-3 mb-0 md:mb-2">
+          <!-- <div class="flex items-center gap-3 mb-0 md:mb-2"> -->
+          <div class="flex items-center gap-3">
             <div
-              class="w-16 h-16"
+              class="w-16 h-16 rounded-lg"
               [ngClass]="{
                 'bg-base-200/50': pokemonInstance.shiny,
                 'border border-base-300 bg-base-200': !pokemonInstance.shiny
@@ -26,14 +27,11 @@
                 height="56"
                 width="68"
                 priority
-                class="rounded-lg h-auto w-auto"
+                class="h-auto w-auto"
               />
             </div>
             <div>
               <h2 class="card-title text-lg flex items-center gap-1">
-                @if (pokemonInstance.shiny) {
-                  <span>✨</span>
-                }
                 <span>
                   {{
                     pokemonInstance.nickname
@@ -41,23 +39,35 @@
                       : pokemonInstance.pokemon.displayNameDe
                   }}
                 </span>
-                @if (pokemonInstance.shiny) {
-                  <span>✨</span>
-                }
+                <span class="flex items-center gap-1">
+                  {{ getGenderEmoji(pokemonInstance.gender) }}
+                </span>
               </h2>
               <div class="flex flex-wrap gap-2 mt-1">
                 <span class="badge badge-ghost flex items-center gap-1">
-                  <fa-icon icon="star" class="text-yellow-400" />
+                  <!--<fa-icon icon="star" class="text-yellow-400" />-->
                   Lv. {{ pokemonInstance.level }}
                 </span>
                 <span class="badge badge-ghost flex items-center gap-1">
-                  {{ getGenderEmoji(pokemonInstance.gender) }}
+                  <fa-icon
+                    [class]="getTypeTextColor(pokemonInstance.pokemon.type1)"
+                    [icon]="getTypeIcon(pokemonInstance.pokemon.type1)"
+                  ></fa-icon>
                 </span>
+                @if (pokemonInstance.pokemon.type2) {
+                  <span class="badge badge-ghost flex items-center gap-1">
+                    <fa-icon
+                      [class]="getTypeTextColor(pokemonInstance.pokemon.type2)"
+                      [icon]="getTypeIcon(pokemonInstance.pokemon.type2)"
+                    ></fa-icon>
+                  </span>
+                }
               </div>
             </div>
           </div>
           <div class="hidden md:block">
             <!-- Types -->
+            <!--
             <div class="flex items-center gap-2 mt-1">
               <app-pokemon-type-label
                 [pokemonType]="pokemonInstance.pokemon.type1"
@@ -68,6 +78,7 @@
                 ></app-pokemon-type-label>
               }
             </div>
+            -->
             <div class="divider my-2"></div>
 
             <!-- Caught & Channel -->
