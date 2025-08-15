@@ -1,16 +1,18 @@
 import { Component, Input } from '@angular/core';
 import { PokedexEntry } from '../../../core/resolvers/pokedex.resolver';
 import { PokemonTypeLabelComponent } from '../../../shared/components/pokemon-type-label/pokemon-type-label.component';
-import { NgClass } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-pokemon-species-card',
-  imports: [PokemonTypeLabelComponent, NgClass],
+  imports: [PokemonTypeLabelComponent],
   templateUrl: './pokemon-species-card.component.html',
   styleUrl: './pokemon-species-card.component.scss',
 })
 export class PokemonSpeciesCardComponent {
   @Input({ required: true }) pokedexEntry!: PokedexEntry;
+
+  constructor(private router: Router) {}
 
   get isCaught() {
     return this.pokedexEntry.caughtPokemon.length > 0;
@@ -53,5 +55,23 @@ export class PokemonSpeciesCardComponent {
       }
     }
     return null;
+  }
+
+  get cardClass(): string {
+    if (this.isCaught && this.hasShiny) {
+      return 'hover:-translate-y-1 rainbow-bg cursor-pointer border-warning';
+    }
+    if (this.isCaught && !this.hasShiny) {
+      return 'bg-base-100 hover:-translate-y-1 cursor-pointer';
+    }
+    return 'border-base-100';
+  }
+
+  onPokemonSpeciesClick() {
+    if (this.isCaught) {
+      this.router.navigateByUrl(
+        `/pokemon?pokemonId=${this.pokedexEntry.caughtPokemon[0].id}`,
+      );
+    }
   }
 }

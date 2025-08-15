@@ -1,11 +1,7 @@
 <div
-  class="relative rounded-lg p-4 flex flex-col items-center w-40 cursor-default drop-shadow-lg border-2 border-neutral-300 justify-center indicator"
-  [ngClass]="{
-    'rainbow-bg': isCaught && hasShiny,
-    'border-warning': isCaught && hasShiny,
-    'bg-base-100': isCaught && !hasShiny,
-    'border-base-100': !isCaught
-  }"
+  class="relative rounded-lg p-4 flex flex-col items-center w-40 drop-shadow-lg border-2 border-neutral-300 justify-center indicator transition-transform"
+  [class]="cardClass"
+  (click)="onPokemonSpeciesClick()"
 >
   @if (amountCaught > 1) {
     <span class="indicator-item badge badge-accent rounded-full">{{

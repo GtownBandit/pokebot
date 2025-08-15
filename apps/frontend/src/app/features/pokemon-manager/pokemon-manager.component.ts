@@ -41,13 +41,29 @@ export class PokemonManagerComponent {
   ) {
     library.addIcons(faStar, faVenusMars, faCalendarAlt, faHashtag);
 
-    this.pokemonInstancesWithSprites = this.route.snapshot.data[
-      'pokemonInstances'
-    ].sort(
-      (a: PokemonInstanceWithSprites, b: PokemonInstanceWithSprites) =>
-        new Date(b.spawnEvent.expiresAt!).getTime() -
-        new Date(a.spawnEvent.expiresAt!).getTime(),
-    );
+    let filterPokemonId = this.route.snapshot.queryParamMap.get('pokemonId');
+
+    if (filterPokemonId) {
+      this.pokemonInstancesWithSprites = this.route.snapshot.data[
+        'pokemonInstances'
+      ]
+        .filter((pokemonInstance: PokemonInstanceWithSprites) => {
+          return pokemonInstance.pokemonId.toString() === filterPokemonId;
+        })
+        .sort(
+          (a: PokemonInstanceWithSprites, b: PokemonInstanceWithSprites) =>
+            new Date(b.spawnEvent.expiresAt!).getTime() -
+            new Date(a.spawnEvent.expiresAt!).getTime(),
+        );
+    } else {
+      this.pokemonInstancesWithSprites = this.route.snapshot.data[
+        'pokemonInstances'
+      ].sort(
+        (a: PokemonInstanceWithSprites, b: PokemonInstanceWithSprites) =>
+          new Date(b.spawnEvent.expiresAt!).getTime() -
+          new Date(a.spawnEvent.expiresAt!).getTime(),
+      );
+    }
   }
 
   getGenderEmoji(gender: Gender) {

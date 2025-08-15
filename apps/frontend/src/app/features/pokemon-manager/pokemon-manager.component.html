@@ -14,17 +14,21 @@
         <div class="card-body p-4 flex flex-col gap-2">
           <!-- Top row: image + name -->
           <div class="flex items-center gap-3 mb-0 md:mb-2">
-            <img
-              [ngSrc]="pokemonInstance.pokemon.pokemonSprites.spriteDefault"
-              height="56"
-              width="68"
-              priority
-              class="w-16 h-16 rounded-lg"
+            <div
+              class="w-16 h-16"
               [ngClass]="{
                 'bg-base-200/50': pokemonInstance.shiny,
                 'border border-base-300 bg-base-200': !pokemonInstance.shiny
               }"
-            />
+            >
+              <img
+                [ngSrc]="pokemonInstance.pokemon.pokemonSprites.spriteDefault"
+                height="56"
+                width="68"
+                priority
+                class="rounded-lg h-auto w-auto"
+              />
+            </div>
             <div>
               <h2 class="card-title text-lg flex items-center gap-1">
                 @if (pokemonInstance.shiny) {
