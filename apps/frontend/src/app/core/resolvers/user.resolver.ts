@@ -25,7 +25,10 @@ export class UserResolver implements Resolve<any> {
         let twitchId = null;
         if (user?.sub) {
           const segments = user.sub.split('|');
-          if (segments.length === 3 && segments[1] === 'twitch') {
+          if (
+            segments.length === 3 &&
+            (segments[1] === 'twitch' || segments[1] === 'custom-twitch')
+          ) {
             twitchId = segments[2];
           }
         }

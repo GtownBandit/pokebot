@@ -18,17 +18,10 @@ import {
   faStar,
   faVenusMars,
 } from '@fortawesome/free-solid-svg-icons';
-import { PokemonTypeLabelComponent } from '../../shared/components/pokemon-type-label/pokemon-type-label.component';
 
 @Component({
   selector: 'app-pokemon-manager',
-  imports: [
-    NgOptimizedImage,
-    DatePipe,
-    FontAwesomeModule,
-    PokemonTypeLabelComponent,
-    NgClass,
-  ],
+  imports: [NgOptimizedImage, DatePipe, FontAwesomeModule, NgClass],
   templateUrl: './pokemon-manager.component.html',
   styleUrl: './pokemon-manager.component.scss',
 })
