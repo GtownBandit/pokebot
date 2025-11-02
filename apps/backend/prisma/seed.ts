@@ -97,6 +97,7 @@ async function main() {
 
     console.log('Inserted Pokémon:', pokemonData.name);
   }
+  await test();
 }
 
 async function test() {
@@ -125,8 +126,6 @@ async function test() {
   }
 }
 
-test().catch((e) => console.error(e));
-
-// main()
-//   .catch((e) => console.error(e))
-//   .finally(() => prisma.$disconnect());
+main()
+  .catch((e) => console.error(e))
+  .finally(() => prisma.$disconnect());

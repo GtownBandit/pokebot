@@ -1,0 +1,35 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: pokebot-db
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    networks:
+      - nginx-net
+  backend:
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile
+    container_name: pokebot-backend
+    env_file: .env
+    restart: unless-stopped
+    depends_on:
+      - db
+    networks:
+      - nginx-net
+    working_dir: /app
+  frontend:
+    build:
+      context: .
+      dockerfile: apps/frontend/Dockerfile
+    container_name: pokebot-frontend
+    restart: unless-stopped
+    networks:
+      - nginx-net
+    depends_on:
+      - backend
+networks:
+  nginx-net:
+    driver: bridge
