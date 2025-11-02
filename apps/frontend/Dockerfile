@@ -17,6 +17,6 @@ RUN pnpm --filter frontend run vercel-build
 
 # Stage 2: Serve with nginx
 FROM nginx:alpine
-COPY --from=build /app/apps/frontend/dist/ /usr/share/nginx/html
+COPY --from=build /app/apps/frontend/dist/frontend/browser /usr/share/nginx/html
 COPY /apps/frontend/nginx.conf /etc/nginx/conf.d/default.conf
 CMD ["nginx", "-g", "daemon off;"]
