@@ -30,6 +30,8 @@ services:
       - nginx-net
     depends_on:
       - backend
+    ports:
+      - 8080:80
 networks:
   nginx-net:
     external: true

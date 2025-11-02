@@ -13,10 +13,11 @@ RUN pnpm install
 RUN pnpm --filter backend exec prisma generate
 
 # Build the frontend
-RUN pnpm --filter frontend run vercel-build
+RUN pnpm --filter frontend run build --configuration production
 
 # Stage 2: Serve with nginx
 FROM nginx:alpine
 COPY --from=build /app/apps/frontend/dist/frontend/browser /usr/share/nginx/html
 COPY /apps/frontend/nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
