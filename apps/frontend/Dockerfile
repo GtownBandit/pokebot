@@ -18,6 +18,11 @@ RUN pnpm --filter frontend run build --configuration production
 # Stage 2: Serve with nginx
 FROM nginx:alpine
 COPY --from=build /app/apps/frontend/dist/frontend/browser /usr/share/nginx/html
+
+# Set the correct permissions for the assets directory
+RUN chown -R nginx:nginx /usr/share/nginx/html/assets && \
+    chmod -R 755 /usr/share/nginx/html/assets
+
 COPY /apps/frontend/nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
