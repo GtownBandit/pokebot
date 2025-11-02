@@ -32,4 +32,5 @@ services:
       - backend
 networks:
   nginx-net:
-    driver: bridge
+    external: true
+    name: nginx-net

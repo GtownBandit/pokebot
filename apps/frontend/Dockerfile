@@ -13,7 +13,7 @@ RUN pnpm install
 RUN pnpm --filter backend exec prisma generate
 
 # Build the frontend
-RUN pnpm --filter frontend run build
+RUN pnpm --filter frontend run vercel-build
 
 # Stage 2: Serve with nginx
 FROM nginx:alpine
