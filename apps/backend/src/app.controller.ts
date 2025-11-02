@@ -19,6 +19,7 @@ import {
   PokemonSprite,
   SpawnEvent,
 } from '@prisma/generated-client';
+import { GameClient, PokemonClient } from 'pokenode-ts';
 
 export type PokedexEntry = PokemonSpecies & {
   defaultPokemon: (Pokemon & { pokemonSprites: PokemonSprite | null }) | null;
@@ -187,6 +188,142 @@ export class AppController {
         'Failed to create user',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
+    }
+  }
+
+  @Get('seed-db')
+  async seedDb(): Promise<any> {
+    try {
+      await this.insertOne();
+      await this.insertTwo();
+      return { message: 'Database seeding completed successfully.' };
+    } catch (error) {
+      console.error('Error during database seeding:', error);
+      throw new HttpException(
+        'Database seeding failed',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async insertOne() {
+    const pokemonClient = new PokemonClient();
+    const gameClient = new GameClient();
+    const generation = await gameClient.getGenerationById(1);
+    const pokemonSpeciesArray = generation.pokemon_species;
+
+    // Add all Pokémon from Generation 1 to the database
+    console.log('Inserting Pokémon from Generation 1...');
+    for (let i = 0; i < pokemonSpeciesArray.length; i++) {
+      let pokemon = await pokemonClient.getPokemonByName(
+        pokemonSpeciesArray[i].name,
+      );
+      let pokemonSpecies = await pokemonClient.getPokemonSpeciesByName(
+        pokemonSpeciesArray[i].name,
+      );
+
+      let defaultPokemonVariety = pokemonSpecies.varieties.find((pokemon) => {
+        return pokemon.is_default;
+      });
+      if (!defaultPokemonVariety) {
+        throw new Error(
+          `No default variety found for Pokémon: ${pokemonSpecies.name}`,
+        );
+      }
+      const defaultPokemonId = parseInt(
+        defaultPokemonVariety.pokemon.url.split('/')[6],
+      );
+
+      // 1. Create species without defaultPokemonId
+      const pokemonSpeciesData = {
+        id: pokemonSpecies.id,
+        genderRate: pokemonSpecies.gender_rate,
+        isBaby: pokemonSpecies.is_baby,
+        isLegendary: pokemonSpecies.is_legendary,
+        isMythical: pokemonSpecies.is_mythical,
+        captureRate: pokemonSpecies.capture_rate,
+        // defaultPokemonId will be set later
+      };
+      await this.prisma.pokemonSpecies.create({ data: pokemonSpeciesData });
+
+      // 2. Create Pokemon
+      const pokemonData = {
+        id: pokemon.id,
+        name: pokemon.name,
+        displayName:
+          pokemonSpecies.names.find((name) => name.language.name === 'en')
+            ?.name || '',
+        displayNameDe:
+          pokemonSpecies.names.find((name) => name.language.name === 'de')
+            ?.name || '',
+        type1: pokemon.types[0].type.name,
+        type2: pokemon.types[1]?.type.name || null,
+        pokemonSpeciesId: pokemonSpecies.id,
+      };
+      await this.prisma.pokemon.create({ data: pokemonData });
+
+      // 3. Create Sprite
+      const showdown = (pokemon.sprites.other as any)['showdown'];
+      if (
+        !showdown ||
+        showdown.front_default === null ||
+        showdown.front_shiny === null ||
+        showdown.back_default === null ||
+        showdown.back_shiny === null ||
+        pokemon.sprites.versions['generation-viii'].icons.front_default === null
+      ) {
+        throw new Error('Missing sprite data for Pokémon: ' + pokemon.name);
+      }
+      const pokemonSpriteData = {
+        pokemonId: pokemon.id,
+        frontDefault: showdown.front_default,
+        frontShiny: showdown.front_shiny,
+        backDefault: showdown.back_default,
+        backShiny: showdown.back_shiny,
+        frontFemale: showdown.front_female,
+        frontShinyFemale: showdown.front_shiny_female,
+        backFemale: showdown.back_female,
+        backShinyFemale: showdown.back_shiny_female,
+        spriteDefault:
+          pokemon.sprites.versions['generation-viii'].icons.front_default,
+        spriteFemale:
+          pokemon.sprites.versions['generation-viii'].icons.front_female,
+      };
+      await this.prisma.pokemonSprite.create({ data: pokemonSpriteData });
+
+      // 4. Update species to set defaultPokemonId
+      await this.prisma.pokemonSpecies.update({
+        where: { id: pokemonSpecies.id },
+        data: { defaultPokemonId },
+      });
+
+      console.log('Inserted Pokémon:', pokemonData.name);
+    }
+  }
+
+  async insertTwo() {
+    const pokemonClient = new PokemonClient();
+    const gameClient = new GameClient();
+    const generation = await gameClient.getGenerationById(1);
+    const pokemonSpeciesArray = generation.pokemon_species;
+    for (let i = 0; i < pokemonSpeciesArray.length; i++) {
+      let pokemon = await pokemonClient.getPokemonByName(
+        pokemonSpeciesArray[i].name,
+      );
+
+      if (!pokemon.sprites.versions['generation-viii'].icons.front_default) {
+        throw new Error('Missing sprite for Pokémon: ' + pokemon.name);
+      }
+      await this.prisma.pokemonSprite.update({
+        where: { pokemonId: pokemon.id },
+        data: {
+          spriteDefault:
+            pokemon.sprites.versions['generation-viii'].icons.front_default,
+          spriteFemale:
+            pokemon.sprites.versions['generation-viii'].icons.front_female,
+        },
+      });
+      console.log('Updated sprite for Pokémon:', pokemon.name);
     }
   }
 }
